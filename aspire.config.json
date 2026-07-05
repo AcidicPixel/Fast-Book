@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "src/TravelSite.AppHost/TravelSite.AppHost.csproj"
+  }
+}

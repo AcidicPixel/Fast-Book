@@ -1,0 +1,27 @@
+﻿<Project Sdk="Aspire.AppHost.Sdk/13.2.4">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>7b9ad70a-f27a-4ac2-8e24-3aac3188c18f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\API.Gateway\API.Gateway.csproj" />
+    <ProjectReference Include="..\TripService\TripService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
+	  <PackageReference Include="Aspire.Hosting.AppHost" Version="13.4.6" />
+	  <PackageReference Include="Aspire.Hosting.Azure.PostgreSQL" Version="13.4.6" />
+	  <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="13.4.6" />
+	  <PackageReference Include="Azure.Storage.Blobs" Version="12.29.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+<Solution>
+  <Project Path="src/API.Gateway/API.Gateway.csproj" />
+  <Project Path="src/EventBus/EventBus.csproj" />
+  <Project Path="src/EventBusRabbitMQ/EventBusRabbitMQ.csproj" />
+  <Project Path="src/frontend/frontend.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="src/IntegrationEventLogEF/IntegrationEventLogEF.csproj" />
+  <Project Path="src/ServiceDefaults/ServiceDefaults.csproj" />
+  <Project Path="src/TravelSite.AppHost/TravelSite.AppHost.csproj" />
+  <Project Path="src/TripService/TripService.csproj" />
+</Solution>

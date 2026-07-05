@@ -1,0 +1,27 @@
+{
+  "Routes": [
+    // ==========================================
+    // TRIP SERVICE (No Auth, No Rate Limits for now)
+    // ==========================================
+    {
+      "DownstreamPathTemplate": "/api/trip/{everything}",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/api/trip/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "ServiceName": "trip-service",
+      "Priority": 1,
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": false,
+        "Period": "10s",
+        "PeriodTimespan": 10,
+        "Limit": 50
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Type": "AspireServiceDiscoveryProvider"
+    }
+  }
+}
