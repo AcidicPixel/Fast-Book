@@ -1,13 +1,20 @@
 ﻿// File: Data/TripDbContext.cs
-// ---------------------------------------------------------
-// This is the bridge between our C# code and the PostgreSQL database.
-// Entity Framework (EF) reads this file and figures out how to write the 
-// actual SQL commands to save and retrieve our data.
-// ---------------------------------------------------------
+using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion; // <-- Required for ValueConverter
 using TripService.Model;
 
 namespace TripService.Data;
+
+public class UtcDateTimeConverter : ValueConverter<DateTime, DateTime>
+{
+    public UtcDateTimeConverter()
+        : base(
+            v => v.ToUniversalTime(),
+            v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
+    {
+    }
+}
 
 public class TripDbContext : DbContext
 {
@@ -15,17 +22,22 @@ public class TripDbContext : DbContext
     {
     }
 
-    // This represents the physical table in the database
     public DbSet<Trip> Trips { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Define primary keys and column constraints here
         modelBuilder.Entity<Trip>(entity =>
         {
             entity.HasKey(t => t.Id);
             entity.Property(t => t.Name).IsRequired().HasMaxLength(100);
         });
+    }
 
+    // 2. Apply the converter globally
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder
+            .Properties<DateTime>()
+            .HaveConversion<UtcDateTimeConverter>(); // <-- Pass the class type here instead of lambdas
     }
 }
