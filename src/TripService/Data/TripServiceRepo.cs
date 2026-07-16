@@ -33,6 +33,7 @@ public class TripServiceRepo(TripDbContext context) : ITripServiceRepo
     {
         if (trip == null) throw new ArgumentNullException(nameof(trip));
         trip.CreatedAt = DateTime.UtcNow;
+        trip.Id = Guid.NewGuid();
         context.Trips.Add(trip);
     }
 
