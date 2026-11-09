@@ -1,7 +1,12 @@
 {
   "name": "Paints by Euro",
   "artistName": "[Artist name]",
-  "intro": "[Artist name] makes oil paintings and pencil drawings in [home city].",
+  "tagline": "Oil and graphite, made slowly by hand.",
+  "taglineOptions": [
+    "Oil and graphite, made slowly by hand.",
+    "Paint, pencil, paper, patience.",
+    "Quiet work in oil and pencil."
+  ],
   "description": "Original oil paintings and pencil drawings by [Artist name]. See the work, buy originals and ask about commissions.",
   "email": "[artist email]",
   "currency": "GBP",

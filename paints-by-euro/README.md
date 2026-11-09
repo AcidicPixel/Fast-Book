@@ -36,33 +36,38 @@ The artist's setup guide, the list of placeholders to replace and the steps to g
 
 ## Design system
 
-**Colour.** Three neutrals and one pigment. No colour is ever placed behind artwork: frames, viewer and cards are transparent on paper.
+**Colour.** Three neutrals and one pigment. No colour is ever placed behind artwork: frames, viewer and cards are transparent on paper. Every text colour is at least 7:1 on the paper, measured on the darkest pixel of the texture.
 
-| Token | Value | Use |
-|---|---|---|
-| `--paper` | `#F3F1EC` + fine grain texture | page background |
-| `--graphite` | `#232326` | text, solid buttons |
-| `--graphite-soft` | `#5C5B61` | secondary text (6:1 contrast) |
-| `--rule` | `#CDC9C0` | hairlines |
-| `--pigment` | `#2B3C9B` ultramarine | the only accent: hover, focus, "Available" |
+| Token | Value | Use | Contrast |
+|---|---|---|---|
+| `--paper` | `#F4EFE6` warm off-white | background on every page | — |
+| `--graphite` | `#1E1C19` | text | 14.8:1 (13.7 on darkest texture) |
+| `--graphite-soft` | `#45423C` | secondary text | 8.7:1 (8.1) |
+| `--pigment` | `#2A3990` ultramarine | the one accent: hover, focus, "Available" | 8.8:1 (8.1) |
+| `--rule` | `#CFC7B9` | hairlines only, never text | — |
 
-The pigment is a placeholder. Set it to a pigment that appears in the artist's own paintings (one line in `src/assets/css/site.css`, plus the two pencil-line SVGs and the favicon that use the same hex).
+The pigment is a placeholder. Set it to a pigment from the artist's own paintings (`--pigment` in `src/assets/css/site.css`, plus the hex in the `--pencil-pigment` SVG and the favicon).
 
-**Type.** Self-hosted, so no third-party font requests.
-- Display: *Bodoni Moda* (variable, with optical sizes): page titles, work titles, the wordmark (italic).
-- Body: *Instrument Sans* (variable): text, labels, buttons.
-- Scale: 13 · 15 · 17 · 22 · 28–38 · 36–68 · 44–104 px (the top three are fluid).
-- Labels: 13 px uppercase with 0.1–0.12em letter-spacing. Sizes read "h × w (× d) cm", the convention for artwork.
+**Background.** `#F4EFE6`, plus a seamless 640 px handmade-paper tile (`src/assets/paper-texture.webp`, 28 KB) with fibres and uneven tone. It sits at 6% opacity on a fixed layer behind all content, so it is never on top of artwork. Rebuild it with `node scripts/make-paper-texture.mjs`.
 
-**Space.** 4 · 8 · 16 · 24 · 40 · 64 · 104 · 160 px (`--s-1` … `--s-8`). Side gutter: 16 px on phones to 64 px. Content max width: 1440 px. A 12-column grid places work off-centre on Home, About and Process.
+**Type.** Two self-hosted families, so no third-party font requests.
+- Headings: *Fraunces*, weight 500 (italic for the wordmark and work titles in captions).
+- Body: *Source Sans 3*, weight 400, line height 1.6.
+- Scale: 18 (the minimum for any text) · 22 · 28–36 · 36–56 · 44–80 px.
 
-**Motion.** Every effect is slow and quiet, moves only opacity, transform or mask, never loops, never covers the art, and is switched off by `prefers-reduced-motion`.
-- Brush-stroke page transition: the new page wipes in behind a dry-brush edge, 1 s (cross-document View Transitions; other browsers simply change page).
-- Pencil-line underlines draw in on hover or focus, 0.9 s.
-- Cards lift 4 px on hover. The featured work drifts up to 40 px with scroll.
-- Viewer: smooth zoom (0.38 s) for buttons and keys, direct for pinch, drag and wheel.
+**Space.** 4 · 8 · 16 · 24 · 40 · 64 · 104 · 160 px (`--s-1` … `--s-8`). Side gutter 16–64 px. Content max width 1440 px. A 12-column grid places work off-centre.
 
-**Artsy details.** Paper grain on the background, hand-drawn pencil underlines, pencil-hatch "reserved" mark, brush-stroke transition, and a small watermark on the large images.
+**Motion.** Scroll-linked, quiet, and never takes over scrolling.
+- One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)` (`--ease` in CSS, `Motion.ease` in JS).
+- Only `opacity` and `transform` are animated. Colour changes on hover are instant. No bounce, spring or elastic effects.
+- Paintings entering view (all pages): opacity 0 → 1, scale 92% → 100%, rise 40 px. The effect is tied to scroll position, finishes when the painting's top is 35% up from the bottom of the screen, and reverses when scrolling up. Each painting in a grid row follows its left neighbour by 60 ms. Captions and headings then appear line by line.
+- Home: the featured work is pinned for one screen of scroll while it scales 85% → 100% and its caption, tagline and link fade in.
+- Work and Process: feature sections pin one large image at a time. It drifts 30 px against the page, then crossfades to the next.
+- Viewer: opens by growing the painting from its place on the page while the background fades to paper, and closes back to it. Next and previous crossfade over 700 ms, with the new painting growing 98% → 100% and the caption following 150 ms later. Neighbouring images are decoded in advance, so there is never an empty frame or spinner. On swipe, the painting follows the finger.
+- Photo slider on a work page: the same crossfade, 600 ms.
+- Page changes: a 450 ms crossfade (View Transitions, where supported).
+- Reduced motion: no movement, scale or pinning, only 200 ms fades.
+- Measured: 60 fps with no dropped frames and zero layout shift while scrolling, including on an emulated phone with a 4× slower CPU.
 
 ## Content and images
 
@@ -70,7 +75,7 @@ The pigment is a placeholder. Set it to a pigment that appears in the artist's o
 - Settings: `src/_data/site.json` (currency, shipping, tax line, socials, prints switch, analytics).
 - Photos: put JPG or PNG files in `src/images/`. The build makes WebP at 480, 1024 and 2048 px wide (never enlarged). 1024 and 2048 get a small watermark; the 480 thumbnail does not. All images except the first on a page are lazy-loaded.
 - Alt text is generated as "Title, oil painting" / "Title, pencil drawing (close detail)".
-- `npm run placeholders` regenerates the labelled placeholder photos.
+- `npm run placeholders` rebuilds the placeholder photos from their sources (Art Institute of Chicago CC0 artworks; Pexels room and studio photos). Sources and licences: `src/images/PLACEHOLDER-SOURCES.md`.
 
 ## Live status (Reserved / Sold)
 

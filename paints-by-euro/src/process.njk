@@ -5,29 +5,42 @@ description: "Inside the studio of [Artist name]: how an oil painting and a penc
 bodyClass: page-process
 ---
 <header class="page-head">
-  <h1 class="page-title">Process</h1>
-  <p class="lede">The studio, and how a work gets started.</p>
+  <h1 class="page-title" data-reveal-text>Process</h1>
+  <p class="lede" data-reveal-text>The studio, and how a work gets started.</p>
 </header>
 
-<section class="process-studio" aria-label="Studio photos">
-  <figure class="ps-1">{% picture "/images/process/studio-1.jpg", "The studio, wide view", "large", "(min-width: 64em) 62vw, 100vw" %}<figcaption>[Caption: the studio in [home city]]</figcaption></figure>
-  <figure class="ps-2">{% picture "/images/process/studio-2.jpg", "Easel and palette in the studio", "thumb", "(min-width: 64em) 30vw, 100vw" %}<figcaption>[Caption: easel and palette]</figcaption></figure>
+<section class="feature" data-feature style="--n: 2" aria-labelledby="studio-title">
+  <div class="feature-stick">
+    <div>
+      <div class="feature-head"><h2 id="studio-title" class="eyebrow" data-reveal-text>The studio</h2></div>
+      <div class="feature-stage">
+        <figure class="feature-slide" data-slide>
+          {% picture "/images/process/placeholder-studio-1.jpg", "Placeholder: an easel in a painting studio", "large", "(min-width: 64em) 70vw, 100vw" %}
+          <figcaption>[Caption: the studio in [home city]]</figcaption>
+        </figure>
+        <figure class="feature-slide" data-slide>
+          {% picture "/images/process/placeholder-studio-2.jpg", "Placeholder: mixing oil paint on a palette", "large", "(min-width: 64em) 70vw, 100vw" %}
+          <figcaption>[Caption: the palette]</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="process-step">
-  <figure>{% picture "/images/process/wip-oil.jpg", "An oil painting in progress", "large", "(min-width: 64em) 40vw, 100vw" %}<figcaption>[Caption: oil painting in progress]</figcaption></figure>
+<section class="process-step" data-reveal-scope>
+  <figure><div data-reveal>{% picture "/images/process/placeholder-wip-oil.jpg", "Placeholder: an oil painting in progress", "large", "(min-width: 64em) 40vw, 100vw" %}</div><figcaption data-reveal-line>[Caption: oil painting in progress]</figcaption></figure>
   <div class="prose">
     <p class="eyebrow">Oil</p>
-    <h2>How I start an oil painting</h2>
+    <h2 data-reveal-text>How I start an oil painting</h2>
     <p>I begin with [the surface, e.g. a canvas toned with a thin wash of colour]. Then I [first step, e.g. draw the main shapes with a thin brush]. I block in the large areas of colour first and leave the details until the paint is [stage]. A painting usually takes [time].</p>
   </div>
 </section>
 
-<section class="process-step process-step--flip">
-  <figure>{% picture "/images/process/wip-pencil.jpg", "A pencil drawing in progress", "large", "(min-width: 64em) 40vw, 100vw" %}<figcaption>[Caption: pencil drawing in progress]</figcaption></figure>
+<section class="process-step process-step--flip" data-reveal-scope>
+  <figure><div data-reveal>{% picture "/images/process/placeholder-wip-pencil.jpg", "Placeholder: a pencil drawing in progress", "large", "(min-width: 64em) 40vw, 100vw" %}</div><figcaption data-reveal-line>[Caption: pencil drawing in progress]</figcaption></figure>
   <div class="prose">
     <p class="eyebrow">Pencil</p>
-    <h2>How I start a pencil drawing</h2>
+    <h2 data-reveal-text>How I start a pencil drawing</h2>
     <p>I start with [paper and pencils, e.g. a hard pencil on heavy cartridge paper]. I [first step, e.g. map the main lines lightly]. Then I build the tone slowly, from light to dark, with [technique, e.g. hatching]. A drawing usually takes [time].</p>
   </div>
 </section>

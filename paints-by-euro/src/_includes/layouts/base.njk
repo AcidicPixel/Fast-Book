@@ -14,8 +14,14 @@
   <meta property="og:url" content="{{ env.url }}{{ page.url }}">
   {%- if ogImage %}<meta property="og:image" content="{{ env.url }}{{ ogImage }}">{% endif %}
   <meta name="theme-color" content="#F3F1EC">
-  <link rel="preload" href="/assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
+  <script>
+    /* Scroll effects start hidden only when JavaScript runs; if the motion
+       script has not started after 3 s, everything is shown. */
+    document.documentElement.classList.add("js");
+    setTimeout(function () { if (!window.Motion) document.documentElement.classList.add("motion-failed"); }, 3000);
+  </script>
   <link rel="stylesheet" href="/assets/css/site.css?v={{ env.build | urlencode }}">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 </head>
@@ -26,6 +32,7 @@
     {{ content | safe }}
   </main>
   {% include "partials/footer.njk" %}
+  <script src="/assets/js/motion.js?v={{ env.build | urlencode }}"></script>
   <script src="/assets/js/site.js?v={{ env.build | urlencode }}" defer></script>
   {%- for js in scripts %}
   <script src="/assets/js/{{ js }}.js?v={{ env.build | urlencode }}" defer></script>

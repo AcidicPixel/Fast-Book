@@ -32,7 +32,7 @@ export default function (config) {
   });
   config.addFilter("mediumLabel", (m) => MEDIUM[m] || m);
   config.addFilter("altText", (work, extra = "") =>
-    `${work.title}, ${(MEDIUM[work.medium] || "").toLowerCase()}${extra ? ` (${extra})` : ""}`
+    `${/placeholder/i.test(work.image || "") ? "Placeholder: " : ""}${work.title}, ${(MEDIUM[work.medium] || "").toLowerCase()}${extra ? ` (${extra})` : ""}`
   );
   config.addFilter("size", (w) =>
     `${w.height} × ${w.width}${w.depth ? ` × ${w.depth}` : ""} ${w.unit || "cm"}`

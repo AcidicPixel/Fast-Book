@@ -39,20 +39,21 @@ Status is one of: **Available**, **Reserved**, **Sold** or **Not for sale**. Che
 
 ## 3. Placeholders you must replace
 
-### Photos (all in `src/images/`, labelled "PLACEHOLDER" in the image)
-- [ ] 9 placeholder works, each with a main photo, close detail, side edge and in-a-room photo (`works/oil-01` … `works/pencil-04`). Delete them once your own works are in.
-- [ ] `about/hands.jpg`: a portrait of you, or your hands at work.
-- [ ] `process/studio-1.jpg` and `process/studio-2.jpg`: the studio.
-- [ ] `process/wip-oil.jpg` and `process/wip-pencil.jpg`: works in progress.
+### Photos: replace all of these before you sell anything
+Every placeholder file name starts with `placeholder-`, and its alt text starts with "Placeholder". Sources and licences are listed in `src/images/PLACEHOLDER-SOURCES.md`.
 
-### Works (`src/works/*.md`, or Works in the CMS)
-- [ ] Titles "Oil I" to "Oil V" and "Pencil I" to "Pencil IV", with their years, materials, sizes, prices and statuses (all invented examples).
-- [ ] Each work's text: "[A sentence or two about this work…]".
-- [ ] Which work is **Featured** on the home page (now Oil I).
+- [ ] **The 9 "works" are real paintings and drawings by other artists**, among them Manet, Monet, Cézanne and Breton. They are public-domain images from the Art Institute of Chicago (CC0), used only so you can see the design with real-looking art. Each work page says so. Never sell or present them as your own. Replace each with your own photos: the whole work, a close detail, the side edge and the work in a room.
+- [ ] The "in a room" images use three Pexels room photos (free for commercial use). To make your own, put your photo in `scripts/make-placeholders.mjs`, or simply photograph the work on a wall in daylight.
+- [ ] `about/placeholder-hands.jpg`: replace with a portrait of you, or your own hands at work.
+- [ ] `process/placeholder-studio-1.jpg`, `placeholder-studio-2.jpg`: your studio.
+- [ ] `process/placeholder-wip-oil.jpg`, `placeholder-wip-pencil.jpg`: your own works in progress.
 
 ### Settings (`src/_data/site.json`, or Settings in the CMS)
 - [ ] `[Artist name]` (appears on Home and About and in search descriptions)
-- [ ] `[home city]` in the home page line
+- [ ] **Home page tagline.** It is set to option 1. Choose one (it's in Settings):
+  1. "Oil and graphite, made slowly by hand." (in use now)
+  2. "Paint, pencil, paper, patience."
+  3. "Quiet work in oil and pencil."
 - [ ] `[artist email]`
 - [ ] Social links: `instagram.com/[handle]`, `facebook.com/[page]`
 - [ ] **Currency:** set to `GBP` as a placeholder. Change it to your currency, e.g. EUR or USD.

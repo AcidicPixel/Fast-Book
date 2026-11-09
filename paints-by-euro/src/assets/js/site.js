@@ -1,9 +1,8 @@
-/* Site-wide behaviour: phone menu, live work status, contact form prefill,
-   and a slow parallax on the home page's featured work. */
+/* Site-wide behaviour: phone menu, live work status and contact form prefill.
+   Scroll motion lives in motion.js. */
 (function () {
   "use strict";
   var root = document.documentElement;
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   /* ---------- Phone menu ---------- */
   var toggle = document.querySelector(".menu-toggle");
@@ -72,18 +71,4 @@
     }
   }
 
-  /* ---------- Home: featured work drifts slowly as you scroll ---------- */
-  var hero = document.querySelector(".hero-figure img");
-  if (hero && !reduceMotion.matches) {
-    var ticking = false;
-    window.addEventListener("scroll", function () {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        var y = Math.min(window.scrollY, 800);
-        hero.style.transform = "translateY(" + (y * 0.05).toFixed(1) + "px)";
-        ticking = false;
-      });
-    }, { passive: true });
-  }
 })();

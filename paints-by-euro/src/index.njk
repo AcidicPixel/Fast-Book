@@ -1,42 +1,44 @@
 ---
 layout: layouts/base.njk
 bodyClass: page-home
-description: "Original oil paintings and pencil drawings by [Artist name]. See new work, buy originals and ask about commissions."
+description: "Original oil paintings and pencil drawings. See the work, buy originals and ask about commissions."
 ---
 {%- set featured = null %}
 {%- for w in collections.works %}{% if w.data.featured and not featured %}{% set featured = w %}{% endif %}{% endfor %}
 {%- if not featured %}{% set featured = collections.works[0] %}{% endif %}
 {%- set f = featured.data %}
-<section class="home-hero" aria-labelledby="featured-title">
-  <a class="hero-figure" href="{{ featured.url }}" data-work="{{ featured.fileSlug }}">
-    {% picture f.image, f | altText, "large", "(min-width: 64em) 66vw, 100vw", "", true %}
-  </a>
-  <div class="hero-caption">
-    <p class="eyebrow">Featured · {{ f.medium | mediumLabel }}</p>
-    <h2 id="featured-title" class="hero-title"><a href="{{ featured.url }}">{{ f.title }}</a></h2>
-    <p class="muted">{{ f.materials }}, {{ f.year }}</p>
-  </div>
-</section>
+<h1 class="visually-hidden">{{ site.name }}: oil paintings and pencil drawings</h1>
 
-<section class="home-intro">
-  <h1 class="intro-line">{{ site.intro }}</h1>
+<section class="hero" data-hero aria-label="Featured work">
+  <div class="hero-stick">
+    <figure class="hero-figure" data-work="{{ featured.fileSlug }}">
+      <a href="{{ featured.url }}" aria-label="{{ f.title }}: details">
+        {% picture f.image, f | altText, "large", "(min-width: 64em) 64rem, 100vw", "", true %}
+      </a>
+    </figure>
+    <div class="hero-text">
+      <p class="hero-caption" data-hero-line><span class="t">{{ f.title }}</span> <span>{{ f.materials }}, {{ f.year }}</span></p>
+      <p class="hero-tagline" data-hero-line>{{ site.tagline }}</p>
+      <a class="text-link" href="/work/" data-hero-line>View the work →</a>
+    </div>
+  </div>
 </section>
 
 <section class="recent" aria-labelledby="recent-title">
   <div class="section-head">
-    <h2 id="recent-title" class="eyebrow">Recent work</h2>
+    <h2 id="recent-title" class="eyebrow" data-reveal-text>Recent work</h2>
     <a class="pencil" href="/work/">All work</a>
   </div>
   <ul class="recent-grid" role="list">
     {%- set n = 0 %}
     {%- for w in collections.works %}{% if w.url != featured.url and n < 4 %}{% set n = n + 1 %}
-    <li class="recent-item recent-{{ n }}" data-work="{{ w.fileSlug }}" data-status="{{ w.data.status | statusKey }}">
+    <li class="recent-item recent-{{ n }}" data-work="{{ w.fileSlug }}" data-status="{{ w.data.status | statusKey }}" data-reveal-scope>
       <a href="{{ w.url }}" class="card-link">
-        <span class="card-frame">{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 30vw, 90vw" %}</span>
+        <span class="card-frame" data-reveal>{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 30vw, 90vw" %}</span>
         <span class="card-caption">
-          <span class="card-title">{{ w.data.title }}</span>
-          <span class="card-meta">{{ w.data.medium | mediumLabel }}, {{ w.data.year }}</span>
-          <span class="status" data-status-label>{{ w.data.status }}</span>
+          <span class="card-title" data-reveal-line>{{ w.data.title }}</span>
+          <span class="card-meta" data-reveal-line>{{ w.data.medium | mediumLabel }}, {{ w.data.year }}</span>
+          <span class="status" data-status-label data-reveal-line>{{ w.data.status }}</span>
         </span>
       </a>
     </li>

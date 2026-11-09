@@ -60,7 +60,8 @@ content:
     fields:
       - { name: name, label: Site name, type: string }
       - { name: artistName, label: Artist name, type: string }
-      - { name: intro, label: "Home page line (who you are, what you make)", type: string }
+      - { name: tagline, label: "Home page tagline (8 words or fewer)", type: string }
+      - { name: taglineOptions, label: "Tagline options (for reference)", type: string, list: true }
       - { name: description, label: "Search engine description", type: text }
       - { name: email, label: Email, type: string }
       - { name: currency, label: "Currency (3-letter code, e.g. GBP, EUR, USD)", type: string }

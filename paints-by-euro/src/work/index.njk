@@ -6,8 +6,8 @@ bodyClass: page-gallery
 scripts: ["viewer"]
 ---
 <header class="page-head">
-  <h1 class="page-title">Work</h1>
-  <p class="lede">Oil paintings and pencil drawings. Select a work to see it full screen and zoom in.</p>
+  <h1 class="page-title" data-reveal-text>Work</h1>
+  <p class="lede" data-reveal-text>Oil paintings and pencil drawings. Select a work to see it full screen and zoom in.</p>
 </header>
 
 <form class="filters" aria-label="Filter the work" data-filters>
@@ -27,19 +27,36 @@ scripts: ["viewer"]
 
 <ul class="gallery" role="list" data-gallery>
   {%- for w in collections.works %}
-  <li class="gallery-item" data-work="{{ w.fileSlug }}" data-medium="{{ w.data.medium }}" data-status="{{ w.data.status | statusKey }}" data-index="{{ loop.index0 }}">
+  <li class="gallery-item" data-work="{{ w.fileSlug }}" data-medium="{{ w.data.medium }}" data-status="{{ w.data.status | statusKey }}" data-index="{{ loop.index0 }}" data-reveal-scope>
     <a href="{{ w.url }}" class="card-link" data-open-work="{{ loop.index0 }}">
-      <span class="card-frame">{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 30vw, (min-width: 40em) 45vw, 92vw" %}</span>
+      <span class="card-frame" data-reveal>{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 30vw, (min-width: 40em) 45vw, 92vw" %}</span>
       <span class="card-caption">
-        <span class="card-title">{{ w.data.title }}</span>
-        <span class="card-meta">{{ w.data.medium | mediumLabel }}, {{ w.data.year }}</span>
-        <span class="status" data-status-label>{{ w.data.status }}</span>
+        <span class="card-title" data-reveal-line>{{ w.data.title }}</span>
+        <span class="card-meta" data-reveal-line>{{ w.data.medium | mediumLabel }}, {{ w.data.year }}</span>
+        <span class="status" data-status-label data-reveal-line>{{ w.data.status }}</span>
       </span>
     </a>
   </li>
   {%- endfor %}
 </ul>
 <p class="empty" data-empty hidden>No works match these filters right now. <a class="pencil" href="/contact/?subject=Commission">Ask about a commission</a>.</p>
+
+{%- set focus = collections.works.slice(0, 3) %}
+<section class="feature" data-feature style="--n: {{ focus.length }}" aria-labelledby="focus-title">
+  <div class="feature-stick">
+    <div>
+      <div class="feature-head"><h2 id="focus-title" class="eyebrow" data-reveal-text>A closer look</h2></div>
+      <div class="feature-stage">
+        {%- for w in focus %}
+        <figure class="feature-slide" data-slide>
+          {% picture w.data.image, w.data | altText, "large", "(min-width: 64em) 70vw, 100vw" %}
+          <figcaption><span class="t">{{ w.data.title }}</span> <span>{{ w.data.materials }}, {{ w.data.year }}</span> <a class="pencil" href="{{ w.url }}">Details and price</a></figcaption>
+        </figure>
+        {%- endfor %}
+      </div>
+    </div>
+  </div>
+</section>
 
 <script type="application/json" id="viewer-items">[
 {%- for w in collections.works %}
