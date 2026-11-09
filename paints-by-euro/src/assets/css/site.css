@@ -224,29 +224,33 @@ main > *, .site-footer > * { max-width: var(--max); margin-left: auto; margin-ri
 .card-meta { color: var(--graphite-soft); }
 .card-link:focus-visible { outline-offset: 8px; }
 
-/* ---------- Scroll reveal (driven by motion.js; hidden only once JS is running) ---------- */
-.js [data-reveal] > :first-child { opacity: 0; will-change: opacity, transform; }
-.js [data-reveal-line] { opacity: 0; will-change: opacity, transform; }
-.js .rl-word { display: inline-block; opacity: 0; will-change: opacity, transform; }
-.motion-failed [data-reveal] > :first-child, .motion-failed [data-reveal-line], .motion-failed .rl-word { opacity: 1 !important; transform: none !important; }
+/* ---------- Simple scroll reveal: fade up once when an item comes into view ----------
+   motion.js adds .is-in; the browser runs the transition. Hidden only once JS is running. */
+.js [data-reveal] > :first-child, .js [data-reveal-text] {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s var(--ease) var(--d, 0ms), transform 0.7s var(--ease) var(--d, 0ms);
+}
+.js [data-reveal-line] {
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.6s var(--ease) calc(var(--d, 0ms) + 150ms), transform 0.6s var(--ease) calc(var(--d, 0ms) + 150ms);
+}
+.js .is-in[data-reveal] > :first-child, .js .is-in[data-reveal-text], .js .is-in [data-reveal-line] { opacity: 1; transform: none; }
+.no-anim [data-reveal] > :first-child, .no-anim [data-reveal-text], .no-anim [data-reveal-line] { transition: none !important; }
+.motion-failed [data-reveal] > :first-child, .motion-failed [data-reveal-line], .motion-failed [data-reveal-text] { opacity: 1 !important; transform: none !important; }
 
-/* ---------- Home: pinned featured work ---------- */
+/* ---------- Home: featured work ---------- */
 .hero { position: relative; }
-.js .hero { height: calc(200svh); } /* one extra screen of scroll while pinned */
 .hero-stick {
   display: flex; flex-direction: column; justify-content: center; gap: var(--s-4);
   padding-block: var(--s-3) var(--s-5);
 }
-.js .hero-stick { position: sticky; top: 0; height: 100svh; }
 .hero-figure { display: block; margin: 0; align-self: flex-start; width: min(100%, 64rem); }
 .hero-figure a { display: block; }
-.hero-figure img { width: auto; max-width: 100%; max-height: calc(100svh - 15rem); transform-origin: 50% 60%; }
-.js .hero-figure img { will-change: transform; }
+.hero-figure img { width: auto; max-width: 100%; max-height: calc(100svh - 15rem); }
 .hero-text { display: grid; gap: var(--s-2); max-width: 40rem; }
 .hero-caption { display: flex; flex-wrap: wrap; gap: 0 0.6em; align-items: baseline; color: var(--graphite-soft); }
 .hero-caption .t { font-family: var(--display); font-weight: 500; font-style: italic; font-size: var(--t-l); color: var(--graphite); }
 .hero-tagline { font-family: var(--display); font-weight: 500; font-size: var(--t-xl); line-height: 1.2; text-wrap: balance; }
-.js [data-hero-line] { opacity: 0; will-change: opacity, transform; }
 .text-link { justify-self: start; font-weight: 600; }
 
 .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-4); padding-bottom: var(--s-3); border-bottom: 1px solid var(--rule); margin-bottom: var(--s-5); }
@@ -275,22 +279,14 @@ main > *, .site-footer > * { max-width: var(--max); margin-left: auto; margin-ri
 .page-head { padding-block: var(--s-6) var(--s-5); display: grid; gap: var(--s-3); }
 .page-title { font-size: var(--t-3xl); }
 
-/* ---------- Feature sections (Work, Process): one large image pinned at a time ---------- */
+/* ---------- Feature sections (Work, Process): large images, one after another ---------- */
 .feature { position: relative; margin-block: var(--s-6); }
 .feature-head { padding-bottom: var(--s-4); }
-.js .feature { height: calc(100svh + var(--n) * 45svh); }
-.js .feature-stick { position: sticky; top: 0; height: 100svh; display: grid; align-items: center; }
 .feature-stage { position: relative; display: grid; gap: var(--s-6); }
-.js .feature-stage { display: block; height: min(86svh, 56rem); }
 .feature-slide { margin: 0; display: grid; gap: var(--s-3); justify-items: start; }
-.js .feature-slide {
-  position: absolute; inset: 0;
-  grid-template-rows: minmax(0, 1fr) auto;
-  opacity: 0; will-change: opacity, transform;
-}
-.js .feature-slide:first-child { opacity: 1; }
-.feature-slide img { width: auto; max-width: 100%; max-height: 100%; min-height: 0; object-fit: contain; object-position: left bottom; }
-.js .feature-slide img { height: 100%; }
+/* Size comes from the image's known aspect ratio, so nothing moves when it loads. */
+.feature-frame { display: block; width: min(100%, calc(82vh * (var(--ar)))); aspect-ratio: var(--ar); }
+.feature-frame img { width: 100%; height: 100%; }
 .feature-slide figcaption { display: flex; flex-wrap: wrap; gap: 0 var(--s-3); align-items: baseline; }
 .feature-slide figcaption .t { font-family: var(--display); font-weight: 500; font-style: italic; font-size: var(--t-l); }
 
@@ -518,11 +514,7 @@ th { font-weight: 600; color: var(--graphite-soft); }
 @media (prefers-reduced-motion: reduce) {
   :root { --fade: 200ms; }
   ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 200ms; }
-  .js .hero, .js .feature { height: auto; }
-  .js .hero-stick, .js .feature-stick { position: static; height: auto; }
-  .js .feature-stage { display: grid; height: auto; }
-  .js .feature-slide { position: static; opacity: 1; }
-  .js .feature-slide img { height: auto; max-height: 80vh; }
+  .js [data-reveal] > :first-child, .js [data-reveal-text], .js [data-reveal-line] { transform: none; transition: opacity 200ms var(--ease); }
   .pencil::after, .prose a::after, .site-nav a::after, .footer-links a::after, .text-link::after,
   .card-title::after, .filters span::after { transform: scaleX(1); opacity: 0; transition: opacity 200ms var(--ease); }
   .pencil:hover::after, .pencil:focus-visible::after, .prose a:hover::after, .prose a:focus-visible::after,

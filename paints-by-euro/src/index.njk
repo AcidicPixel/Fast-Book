@@ -9,7 +9,7 @@ description: "Original oil paintings and pencil drawings. See the work, buy orig
 {%- set f = featured.data %}
 <h1 class="visually-hidden">{{ site.name }}: oil paintings and pencil drawings</h1>
 
-<section class="hero" data-hero aria-label="Featured work">
+<section class="hero" aria-label="Featured work">
   <div class="hero-stick">
     <figure class="hero-figure" data-work="{{ featured.fileSlug }}">
       <a href="{{ featured.url }}" aria-label="{{ f.title }}: details">
@@ -17,9 +17,9 @@ description: "Original oil paintings and pencil drawings. See the work, buy orig
       </a>
     </figure>
     <div class="hero-text">
-      <p class="hero-caption" data-hero-line><span class="t">{{ f.title }}</span> <span>{{ f.materials }}, {{ f.year }}</span></p>
-      <p class="hero-tagline" data-hero-line>{{ site.tagline }}</p>
-      <a class="text-link" href="/work/" data-hero-line>View the work →</a>
+      <p class="hero-caption"><span class="t">{{ f.title }}</span> <span>{{ f.materials }}, {{ f.year }}</span></p>
+      <p class="hero-tagline">{{ site.tagline }}</p>
+      <a class="text-link" href="/work/">View the work →</a>
     </div>
   </div>
 </section>

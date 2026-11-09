@@ -14,12 +14,12 @@ bodyClass: page-process
     <div>
       <div class="feature-head"><h2 id="studio-title" class="eyebrow" data-reveal-text>The studio</h2></div>
       <div class="feature-stage">
-        <figure class="feature-slide" data-slide>
-          {% picture "/images/process/placeholder-studio-1.jpg", "Placeholder: an easel in a painting studio", "large", "(min-width: 64em) 70vw, 100vw" %}
+        <figure class="feature-slide" data-slide data-reveal>
+          <span class="feature-frame" style="--ar: {{ "/images/process/placeholder-studio-1.jpg" | imgRatio }}">{% picture "/images/process/placeholder-studio-1.jpg", "Placeholder: an easel in a painting studio", "large", "(min-width: 64em) 70vw, 100vw" %}</span>
           <figcaption>[Caption: the studio in [home city]]</figcaption>
         </figure>
-        <figure class="feature-slide" data-slide>
-          {% picture "/images/process/placeholder-studio-2.jpg", "Placeholder: mixing oil paint on a palette", "large", "(min-width: 64em) 70vw, 100vw" %}
+        <figure class="feature-slide" data-slide data-reveal>
+          <span class="feature-frame" style="--ar: {{ "/images/process/placeholder-studio-2.jpg" | imgRatio }}">{% picture "/images/process/placeholder-studio-2.jpg", "Placeholder: mixing oil paint on a palette", "large", "(min-width: 64em) 70vw, 100vw" %}</span>
           <figcaption>[Caption: the palette]</figcaption>
         </figure>
       </div>

@@ -48,8 +48,8 @@ scripts: ["viewer"]
       <div class="feature-head"><h2 id="focus-title" class="eyebrow" data-reveal-text>A closer look</h2></div>
       <div class="feature-stage">
         {%- for w in focus %}
-        <figure class="feature-slide" data-slide>
-          {% picture w.data.image, w.data | altText, "large", "(min-width: 64em) 70vw, 100vw" %}
+        <figure class="feature-slide" data-slide data-reveal>
+          <span class="feature-frame" style="--ar: {{ w.data.image | imgRatio }}">{% picture w.data.image, w.data | altText, "large", "(min-width: 64em) 70vw, 100vw" %}</span>
           <figcaption><span class="t">{{ w.data.title }}</span> <span>{{ w.data.materials }}, {{ w.data.year }}</span> <a class="pencil" href="{{ w.url }}">Details and price</a></figcaption>
         </figure>
         {%- endfor %}

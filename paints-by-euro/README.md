@@ -57,17 +57,13 @@ The pigment is a placeholder. Set it to a pigment from the artist's own painting
 
 **Space.** 4 · 8 · 16 · 24 · 40 · 64 · 104 · 160 px (`--s-1` … `--s-8`). Side gutter 16–64 px. Content max width 1440 px. A 12-column grid places work off-centre.
 
-**Motion.** Scroll-linked, quiet, and never takes over scrolling.
-- One easing curve everywhere: `cubic-bezier(0.22, 1, 0.36, 1)` (`--ease` in CSS, `Motion.ease` in JS).
-- Only `opacity` and `transform` are animated. Colour changes on hover are instant. No bounce, spring or elastic effects.
-- Paintings entering view (all pages): opacity 0 → 1, scale 92% → 100%, rise 40 px. The effect is tied to scroll position, finishes when the painting's top is 35% up from the bottom of the screen, and reverses when scrolling up. Each painting in a grid row follows its left neighbour by 60 ms. Captions and headings then appear line by line.
-- Home: the featured work is pinned for one screen of scroll while it scales 85% → 100% and its caption, tagline and link fade in.
-- Work and Process: feature sections pin one large image at a time. It drifts 30 px against the page, then crossfades to the next.
-- Viewer: opens by growing the painting from its place on the page while the background fades to paper, and closes back to it. Next and previous crossfade over 700 ms, with the new painting growing 98% → 100% and the caption following 150 ms later. Neighbouring images are decoded in advance, so there is never an empty frame or spinner. On swipe, the painting follows the finger.
-- Photo slider on a work page: the same crossfade, 600 ms.
+**Motion.** Simple and quiet.
+- Paintings, captions and headings fade up once (24 px, 0.7 s) as they come into view. Paintings side by side follow each other by 80 ms, and captions follow their painting by 150 ms. Anything already on screen when the page opens appears straight away.
+- The browser runs these as CSS transitions, so no script runs while scrolling. Nothing is pinned, and scrolling speed is never changed.
+- One easing curve: `cubic-bezier(0.22, 1, 0.36, 1)`. Only `opacity` and `transform` are animated.
+- Viewer: the painting grows from its place on the page and goes back on close. Next and previous use a 700 ms crossfade, and swiping follows your finger. The photo slider crossfades in 600 ms.
 - Page changes: a 450 ms crossfade (View Transitions, where supported).
-- Reduced motion: no movement, scale or pinning, only 200 ms fades.
-- Measured: 60 fps with no dropped frames and zero layout shift while scrolling, including on an emulated phone with a 4× slower CPU.
+- Reduced motion: only 200 ms fades.
 
 ## Content and images
 
