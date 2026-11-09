@@ -1,0 +1,22 @@
+{
+  "name": "Paints by Euro",
+  "artistName": "[Artist name]",
+  "intro": "[Artist name] makes oil paintings and pencil drawings in [home city].",
+  "description": "Original oil paintings and pencil drawings by [Artist name]. See the work, buy originals and ask about commissions.",
+  "email": "[artist email]",
+  "currency": "GBP",
+  "taxRule": "[tax rule]",
+  "social": [
+    { "label": "Instagram", "url": "https://instagram.com/[handle]" },
+    { "label": "Facebook", "url": "https://facebook.com/[page]" }
+  ],
+  "shipping": {
+    "regions": [
+      { "id": "home", "label": "[Home country]", "cost": 25, "countries": ["GB"] },
+      { "id": "europe", "label": "Europe", "cost": 45, "countries": ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE","NO","CH","IS","LI"] },
+      { "id": "world", "label": "Rest of the world", "cost": 80, "countries": ["*"] }
+    ]
+  },
+  "prints": { "enabled": false },
+  "analytics": { "cloudflareToken": "" }
+}

@@ -1,0 +1,49 @@
+---
+layout: layouts/base.njk
+pageTitle: "Checkout"
+description: "Choose a shipping region and pay with Stripe or PayPal."
+noindex: true
+bodyClass: page-checkout
+scripts: ["checkout"]
+---
+<section class="checkout" data-checkout>
+  <h1 class="page-title">Checkout</h1>
+  <p class="test-flag" data-test-flag hidden>Test mode. No real money is taken.</p>
+
+  <div class="checkout-grid">
+    <div class="checkout-item" data-item>
+      <p class="muted">Loading…</p>
+    </div>
+
+    <div class="checkout-steps" data-steps hidden>
+      <fieldset class="region">
+        <legend>1. Where should it go?</legend>
+        <div data-regions></div>
+        <p class="fine">The payment page asks for the full address. <a class="pencil" href="/shipping-returns/">Shipping and returns</a></p>
+      </fieldset>
+
+      <dl class="totals" aria-live="polite">
+        <div><dt>Price</dt><dd data-subtotal></dd></div>
+        <div><dt>Shipping</dt><dd data-shipping></dd></div>
+        <div><dt>Tax</dt><dd>{{ site.taxRule }}</dd></div>
+        <div class="total"><dt>Total</dt><dd data-total></dd></div>
+      </dl>
+
+      <fieldset class="pay">
+        <legend>2. Pay</legend>
+        <div class="pay-options">
+          <div class="pay-option">
+            <p class="pay-label">Card, Apple Pay or Google Pay</p>
+            <button type="button" class="pay-btn pay-stripe" data-pay-stripe>Pay by card <span class="pay-via">with Stripe</span></button>
+          </div>
+          <div class="pay-option">
+            <p class="pay-label">PayPal account</p>
+            <div class="pay-btn-slot" data-paypal-slot><span class="pay-btn pay-disabled">PayPal is loading…</span></div>
+          </div>
+        </div>
+        <p class="fine">You pay on Stripe’s or PayPal’s own secure page. This site never sees your card details. The work is held for you for 30 minutes while you pay.</p>
+        <p class="form-error" role="alert" data-error hidden></p>
+      </fieldset>
+    </div>
+  </div>
+</section>

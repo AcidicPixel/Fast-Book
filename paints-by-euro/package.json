@@ -1,0 +1,17 @@
+{
+  "name": "paints-by-euro",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "placeholders": "node scripts/make-placeholders.mjs",
+    "test": "eleventy --quiet && node --test tests/*.test.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@11ty/eleventy": "3.1.8",
+    "@netlify/blobs": "11.1.9",
+    "sharp": "0.35.5"
+  }
+}

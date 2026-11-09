@@ -1,0 +1,79 @@
+---
+layout: layouts/base.njk
+scripts: ["viewer"]
+bodyClass: page-work-detail
+---
+{%- set slug = page.fileSlug %}
+{%- set work = { title: title, medium: medium } %}
+{%- set all = collections.works %}
+{%- set photos = [
+  { src: image, label: "Whole work", alt: work | altText },
+  { src: detail, label: "Close detail", alt: work | altText("close detail") },
+  { src: edge, label: "Side edge", alt: work | altText("side edge") },
+  { src: room, label: "In a room", alt: work | altText("shown in a room") }
+] %}
+<article class="work-detail" data-work="{{ slug }}" data-status="{{ status | statusKey }}">
+  <div class="work-media">
+    <button class="work-main zoomable" type="button" data-open-photo="0" aria-label="View {{ title }} full screen and zoom in">
+      {% picture image, work | altText, "large", "(min-width: 64em) 60vw, 100vw", "", true %}
+    </button>
+
+    <section class="photo-slider" aria-label="More photos of {{ title }}">
+      <div class="slider-head">
+        <h2 class="eyebrow">More photos</h2>
+        <div class="slider-controls">
+          <button type="button" class="icon-btn" data-slide="-1" aria-label="Previous photo">←</button>
+          <button type="button" class="icon-btn" data-slide="1" aria-label="Next photo">→</button>
+        </div>
+      </div>
+      <ul class="slider-track" role="list">
+        {%- for ph in photos %}{% if not loop.first %}
+        <li>
+          <button type="button" class="slide zoomable" data-open-photo="{{ loop.index0 }}" aria-label="View {{ ph.label | lower }} full screen">
+            {% picture ph.src, ph.alt, "thumb", "(min-width: 64em) 18vw, 60vw" %}
+            <span class="slide-label">{{ ph.label }}</span>
+          </button>
+        </li>
+        {%- endif %}{% endfor %}
+      </ul>
+    </section>
+  </div>
+
+  <div class="work-info">
+    <p class="eyebrow">{{ medium | mediumLabel }}</p>
+    <h1 class="work-title">{{ title }}</h1>
+    <dl class="facts">
+      <div><dt>Year</dt><dd>{{ year }}</dd></div>
+      <div><dt>Medium</dt><dd>{{ materials }}</dd></div>
+      <div><dt>Size</dt><dd>{{ { height: height, width: width, depth: depth, unit: unit } | size }} <span class="muted">(h × w{% if depth %} × d{% endif %})</span></dd></div>
+      <div><dt>Price</dt><dd>{% if status == "Not for sale" %}—{% else %}{{ price | money(site.currency) }}{% endif %}</dd></div>
+      <div><dt>Status</dt><dd><span class="status" data-status-label>{{ status }}</span></dd></div>
+    </dl>
+
+    <div class="work-actions">
+      <a class="btn btn-solid" href="/checkout/?work={{ slug }}" data-buy {% if status != "Available" %}hidden{% endif %}>Buy</a>
+      <a class="btn btn-line" href="/contact/?subject=Purchase&amp;work={{ title | urlencode }}">Make an enquiry</a>
+    </div>
+    <p class="fine" data-buy-note {% if status != "Available" %}hidden{% endif %}>
+      Original, one only. Shipping is added at checkout. Pay by card through Stripe or with PayPal.
+    </p>
+
+    <div class="work-text prose">{{ content | safe }}</div>
+
+    <nav class="work-pager" aria-label="More work">
+      {%- set prev = all | getPreviousCollectionItem(page) %}
+      {%- set next = all | getNextCollectionItem(page) %}
+      {%- if prev %}<a class="pencil" href="{{ prev.url }}" rel="prev">← {{ prev.data.title }}</a>{% else %}<span></span>{% endif %}
+      <a class="pencil" href="/work/">All work</a>
+      {%- if next %}<a class="pencil" href="{{ next.url }}" rel="next">{{ next.data.title }} →</a>{% else %}<span></span>{% endif %}
+    </nav>
+  </div>
+</article>
+
+<script type="application/json" id="viewer-items">{{ [
+  { src: image | imgUrl(2048), alt: photos[0].alt, title: title, meta: photos[0].label },
+  { src: detail | imgUrl(2048), alt: photos[1].alt, title: title, meta: photos[1].label },
+  { src: edge | imgUrl(2048), alt: photos[2].alt, title: title, meta: photos[2].label },
+  { src: room | imgUrl(2048), alt: photos[3].alt, title: title, meta: photos[3].label }
+] | json | safe }}</script>
+{% include "partials/viewer.njk" %}

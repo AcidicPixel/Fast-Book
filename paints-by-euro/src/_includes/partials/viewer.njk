@@ -1,0 +1,22 @@
+<dialog class="viewer" aria-label="Full-screen view" data-viewer>
+  <div class="viewer-stage" data-stage>
+    <img class="viewer-img" alt="" data-img draggable="false">
+  </div>
+  <div class="viewer-bar">
+    <div class="viewer-caption" aria-live="polite">
+      <span class="viewer-title" data-title></span>
+      <span class="viewer-meta" data-meta></span>
+      <a class="viewer-link pencil" data-link hidden>Details and price</a>
+    </div>
+    <div class="viewer-tools">
+      <button type="button" class="icon-btn" data-zoom="out" aria-label="Zoom out">−</button>
+      <button type="button" class="icon-btn" data-zoom="reset" aria-label="Fit to screen">Fit</button>
+      <button type="button" class="icon-btn" data-zoom="in" aria-label="Zoom in">+</button>
+      <span class="viewer-count" data-count></span>
+      <button type="button" class="icon-btn" data-nav="-1" aria-label="Previous">←</button>
+      <button type="button" class="icon-btn" data-nav="1" aria-label="Next">→</button>
+      <button type="button" class="icon-btn" data-close aria-label="Close full-screen view">Close</button>
+    </div>
+  </div>
+  <p class="viewer-help">Arrow keys or swipe: previous and next. + and −, scroll or pinch: zoom. Drag or Shift + arrow keys: move around. Esc: close.</p>
+</dialog>

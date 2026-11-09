@@ -1,0 +1,5 @@
+node_modules/
+_site/
+.netlify/
+.cache/
+netlify/functions/_lib/catalog.generated.json

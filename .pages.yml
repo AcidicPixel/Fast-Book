@@ -1,0 +1,97 @@
+# Pages CMS (https://pagescms.org) — a free web editor for this repository.
+# The artist signs in with GitHub and edits works, prices and status without code.
+media:
+  input: paints-by-euro/src/images/uploads
+  output: /images/uploads
+
+content:
+  - name: works
+    label: Works
+    type: collection
+    path: paints-by-euro/src/works
+    filename: "{primary}.md"
+    exclude: [works.11tydata.js]
+    view:
+      fields: [title, medium, status, price, year]
+      primary: title
+      sort: [date, title]
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: medium, label: Medium, type: select, required: true, options: { values: [oil, pencil] }, description: "oil = Oil Paintings filter, pencil = Pencil Drawings filter" }
+      - { name: materials, label: "Materials (shown as Medium)", type: string, description: "e.g. Oil on linen, Graphite pencil on paper" }
+      - { name: year, label: Year, type: number }
+      - { name: height, label: "Height", type: number }
+      - { name: width, label: "Width", type: number }
+      - { name: depth, label: "Depth (0 for paper)", type: number }
+      - { name: unit, label: Unit, type: select, options: { values: [cm, in] }, default: cm }
+      - { name: price, label: "Price (no currency sign)", type: number }
+      - { name: status, label: Status, type: select, required: true, options: { values: [Available, Reserved, Sold, Not for sale] }, description: "Checkout sets Reserved and Sold automatically. Set it here only when you sell or hold a work yourself." }
+      - { name: date, label: "Date added (newest shows first)", type: date }
+      - { name: featured, label: "Feature on the home page", type: boolean }
+      - { name: relist, label: "Relist counter", type: number, default: 0, description: "Only if a sold work comes back (e.g. a refund): add 1 to clear the online Sold mark." }
+      - { name: image, label: "Main photo", type: image, required: true }
+      - { name: detail, label: "Close detail photo", type: image, required: true }
+      - { name: edge, label: "Side edge photo", type: image, required: true }
+      - { name: room, label: "In a room photo", type: image, required: true }
+      - { name: body, label: "About this work", type: text }
+
+  - name: prints
+    label: Prints (hidden until switched on in Settings)
+    type: collection
+    path: paints-by-euro/src/prints-items
+    filename: "{primary}.md"
+    exclude: [prints-items.11tydata.js]
+    view: { fields: [title, price], primary: title }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: work, label: "Original work (file name, e.g. oil-01)", type: string }
+      - { name: size, label: Print size, type: string }
+      - { name: edition, label: Edition, type: string }
+      - { name: price, label: Price, type: number }
+      - { name: image, label: Photo, type: image }
+      - { name: date, label: Date added, type: date }
+      - { name: body, label: Description, type: text }
+
+  - name: settings
+    label: Settings
+    type: file
+    path: paints-by-euro/src/_data/site.json
+    format: json
+    fields:
+      - { name: name, label: Site name, type: string }
+      - { name: artistName, label: Artist name, type: string }
+      - { name: intro, label: "Home page line (who you are, what you make)", type: string }
+      - { name: description, label: "Search engine description", type: text }
+      - { name: email, label: Email, type: string }
+      - { name: currency, label: "Currency (3-letter code, e.g. GBP, EUR, USD)", type: string }
+      - { name: taxRule, label: "Tax / VAT line shown at checkout", type: string }
+      - name: social
+        label: Social links
+        type: object
+        list: true
+        fields:
+          - { name: label, type: string }
+          - { name: url, type: string }
+      - name: shipping
+        label: Shipping
+        type: object
+        fields:
+          - name: regions
+            label: Regions
+            type: object
+            list: true
+            fields:
+              - { name: id, label: "Id (no spaces)", type: string }
+              - { name: label, label: Name, type: string }
+              - { name: cost, label: Cost, type: number }
+              - { name: countries, label: "Country codes (* = everywhere else)", type: string, list: true }
+      - name: prints
+        label: Prints page
+        type: object
+        fields:
+          - { name: enabled, label: Show the Prints page, type: boolean }
+      - name: analytics
+        label: Analytics
+        type: object
+        fields:
+          - { name: cloudflareToken, label: Cloudflare Web Analytics token, type: string }

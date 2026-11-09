@@ -1,0 +1,25 @@
+---
+layout: layouts/base.njk
+pageTitle: "Prints"
+description: "Prints of oil paintings and pencil drawings by [Artist name]."
+bodyClass: page-gallery
+---
+<header class="page-head">
+  <h1 class="page-title">Prints</h1>
+  <p class="lede">[Short text about the prints: paper, printing method, signing.]</p>
+</header>
+<ul class="gallery" role="list">
+  {%- for p in collections.prints %}
+  <li class="gallery-item">
+    <div class="card-link">
+      <span class="card-frame">{% picture p.data.image, p.data.title + ", print", "thumb", "(min-width: 64em) 30vw, 92vw" %}</span>
+      <span class="card-caption">
+        <span class="card-title">{{ p.data.title }}</span>
+        <span class="card-meta">{{ p.data.size }} · {{ p.data.edition }}</span>
+        <span class="card-meta">{{ p.data.price | money(site.currency) }}</span>
+      </span>
+    </div>
+    <a class="btn btn-solid btn-small" href="/checkout/?print={{ p.fileSlug }}">Buy print</a>
+  </li>
+  {%- endfor %}
+</ul>

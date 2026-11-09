@@ -1,0 +1,49 @@
+---
+layout: layouts/base.njk
+pageTitle: "Work"
+description: "All oil paintings and pencil drawings by [Artist name]. Filter by medium or show only the works you can buy."
+bodyClass: page-gallery
+scripts: ["viewer"]
+---
+<header class="page-head">
+  <h1 class="page-title">Work</h1>
+  <p class="lede">Oil paintings and pencil drawings. Select a work to see it full screen and zoom in.</p>
+</header>
+
+<form class="filters" aria-label="Filter the work" data-filters>
+  <fieldset>
+    <legend>Medium</legend>
+    <label><input type="radio" name="medium" value="all" checked> <span>All</span></label>
+    <label><input type="radio" name="medium" value="oil"> <span>Oil Paintings</span></label>
+    <label><input type="radio" name="medium" value="pencil"> <span>Pencil Drawings</span></label>
+  </fieldset>
+  <fieldset>
+    <legend>Show</legend>
+    <label><input type="radio" name="avail" value="all" checked> <span>All</span></label>
+    <label><input type="radio" name="avail" value="available"> <span>Available</span></label>
+  </fieldset>
+  <p class="filter-count" aria-live="polite" data-filter-count>{{ collections.works.length }} works</p>
+</form>
+
+<ul class="gallery" role="list" data-gallery>
+  {%- for w in collections.works %}
+  <li class="gallery-item" data-work="{{ w.fileSlug }}" data-medium="{{ w.data.medium }}" data-status="{{ w.data.status | statusKey }}" data-index="{{ loop.index0 }}">
+    <a href="{{ w.url }}" class="card-link" data-open-work="{{ loop.index0 }}">
+      <span class="card-frame">{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 30vw, (min-width: 40em) 45vw, 92vw" %}</span>
+      <span class="card-caption">
+        <span class="card-title">{{ w.data.title }}</span>
+        <span class="card-meta">{{ w.data.medium | mediumLabel }}, {{ w.data.year }}</span>
+        <span class="status" data-status-label>{{ w.data.status }}</span>
+      </span>
+    </a>
+  </li>
+  {%- endfor %}
+</ul>
+<p class="empty" data-empty hidden>No works match these filters right now. <a class="pencil" href="/contact/?subject=Commission">Ask about a commission</a>.</p>
+
+<script type="application/json" id="viewer-items">[
+{%- for w in collections.works %}
+{{ { src: w.data.image | imgUrl(2048), alt: w.data | altText, title: w.data.title, meta: (w.data.medium | mediumLabel) + ", " + w.data.year, href: w.url, slug: w.fileSlug } | json | safe }}{% if not loop.last %},{% endif %}
+{%- endfor %}
+]</script>
+{% include "partials/viewer.njk" %}

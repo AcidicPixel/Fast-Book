@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- set fullTitle = (pageTitle + " — " + site.name) if pageTitle else (site.name + " — Oil paintings and pencil drawings") %}
+  <title>{{ fullTitle }}</title>
+  <meta name="description" content="{{ description or site.description }}">
+  <link rel="canonical" href="{{ env.url }}{{ page.url }}">
+  {%- if noindex %}<meta name="robots" content="noindex">{% endif %}
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:title" content="{{ fullTitle }}">
+  <meta property="og:description" content="{{ description or site.description }}">
+  <meta property="og:url" content="{{ env.url }}{{ page.url }}">
+  {%- if ogImage %}<meta property="og:image" content="{{ env.url }}{{ ogImage }}">{% endif %}
+  <meta name="theme-color" content="#F3F1EC">
+  <link rel="preload" href="/assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/site.css?v={{ env.build | urlencode }}">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="{{ bodyClass }}">
+  <a class="skip" href="#main">Skip to content</a>
+  {% include "partials/header.njk" %}
+  <main id="main" tabindex="-1">
+    {{ content | safe }}
+  </main>
+  {% include "partials/footer.njk" %}
+  <script src="/assets/js/site.js?v={{ env.build | urlencode }}" defer></script>
+  {%- for js in scripts %}
+  <script src="/assets/js/{{ js }}.js?v={{ env.build | urlencode }}" defer></script>
+  {%- endfor %}
+  {%- if site.analytics.cloudflareToken %}
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ site.analytics.cloudflareToken }}"}'></script>
+  {%- endif %}
+</body>
+</html>

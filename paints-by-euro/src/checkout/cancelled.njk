@@ -1,0 +1,20 @@
+---
+layout: layouts/base.njk
+pageTitle: "Checkout cancelled"
+description: "Your checkout was cancelled."
+noindex: true
+permalink: /checkout/cancelled/
+---
+<section class="message-page">
+  <h1 class="page-title">Checkout cancelled</h1>
+  <p class="lede">No payment was taken. The work is available again.</p>
+  <p><a class="pencil" href="/work/">Back to the work</a></p>
+</section>
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    if (!q.get("rid")) return;
+    fetch("/api/release", { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ kind: q.get("kind"), slug: q.get("slug"), rid: q.get("rid") }) }).catch(function () {});
+  })();
+</script>

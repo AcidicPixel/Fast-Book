@@ -1,0 +1,63 @@
+---
+layout: layouts/base.njk
+pageTitle: "Contact"
+description: "Contact [Artist name] about buying a work, a commission, prints or an exhibition."
+bodyClass: page-contact
+---
+<header class="page-head">
+  <h1 class="page-title">Contact</h1>
+  <p class="lede">Questions about a work, a commission, prints or an exhibition. I usually reply within [reply time].</p>
+</header>
+
+<div class="contact-grid">
+  <form class="contact-form" name="contact" method="POST" action="/thanks/?form=contact" data-netlify="true" netlify-honeypot="company" data-contact-form>
+    <input type="hidden" name="form-name" value="contact">
+    <input type="hidden" name="work" value="" data-work-field>
+    <p class="hp"><label>Leave empty <input name="company" tabindex="-1" autocomplete="off"></label></p>
+    <div class="field">
+      <label for="c-name">Name</label>
+      <input id="c-name" name="name" type="text" required autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="c-email">Email</label>
+      <input id="c-email" name="email" type="email" required autocomplete="email">
+    </div>
+    <div class="field">
+      <label for="c-subject">Subject</label>
+      <select id="c-subject" name="subject" required>
+        <option>Commission</option>
+        <option>Purchase</option>
+        <option>Prints</option>
+        <option>Exhibition</option>
+        <option selected>Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="c-message">Message</label>
+      <textarea id="c-message" name="message" rows="7" required></textarea>
+    </div>
+    <button class="btn btn-solid" type="submit">Send message</button>
+    <p class="fine">I use your details only to reply to you. See the <a class="pencil" href="/privacy/">privacy policy</a>.</p>
+  </form>
+
+  <aside class="contact-aside">
+    <section class="commissions prose" aria-labelledby="commissions-title">
+      <h2 id="commissions-title">Commissions</h2>
+      <p>I take on a small number of commissions in oil and in pencil.</p>
+      <ol>
+        <li>Send me a message with the subject “Commission”. Tell me the subject, size and medium you have in mind.</li>
+        <li>I reply with a price and a time. Prices start at [starting price]. Sizes run from [smallest size] to [largest size].</li>
+        <li>When we agree, I ask for a deposit of [deposit]. The rest is due when the work is finished.</li>
+        <li>A commission takes about [time] from the deposit to delivery.</li>
+      </ol>
+    </section>
+    <section class="social" aria-labelledby="social-title">
+      <h2 id="social-title" class="eyebrow">Elsewhere</h2>
+      <ul>
+        {%- for s in site.social %}
+        <li><a class="pencil" href="{{ s.url }}" rel="me noopener">{{ s.label }}</a></li>
+        {%- endfor %}
+      </ul>
+    </section>
+  </aside>
+</div>
