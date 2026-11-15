@@ -2,7 +2,15 @@ import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { processImages, picture, imgUrl, getImage } from "./lib/images.js";
 
-const MEDIUM = { oil: "Oil painting", pencil: "Pencil drawing" };
+// The four mediums. Category names (filters, tiles) and the label for one item.
+export const MEDIUMS = [
+  { key: "oil", name: "Oil Paint", one: "Oil Paint", alt: "oil painting" },
+  { key: "pen", name: "Pen Sketches", one: "Pen Sketch", alt: "pen sketch" },
+  { key: "print", name: "Prints", one: "Print", alt: "print" },
+  { key: "card", name: "Cards & Postcards", one: "Card", alt: "card" },
+];
+const MEDIUM = Object.fromEntries(MEDIUMS.map((m) => [m.key, m.one]));
+const MEDIUM_ALT = Object.fromEntries(MEDIUMS.map((m) => [m.key, m.alt]));
 
 export default function (config) {
   config.addPassthroughCopy({ "src/assets": "assets" });
@@ -31,8 +39,15 @@ export default function (config) {
     return `${i.width} / ${i.height}`;
   });
   config.addFilter("mediumLabel", (m) => MEDIUM[m] || m);
+  config.addGlobalData("mediums", MEDIUMS);
+  config.addFilter("head", (arr, n) => (arr || []).slice(0, n));
+  // Events still to come (dates as YYYY-MM-DD), soonest first.
+  config.addFilter("upcoming", (events) => {
+    const today = new Date().toISOString().slice(0, 10);
+    return (events || []).filter((e) => e && e.date && String(e.date) >= today).sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  });
   config.addFilter("altText", (work, extra = "") =>
-    `${/placeholder/i.test(work.image || "") ? "Placeholder: " : ""}${work.title}, ${(MEDIUM[work.medium] || "").toLowerCase()}${extra ? ` (${extra})` : ""}`
+    `${/placeholder/i.test(work.image || "") ? "Placeholder: " : ""}${work.title}, ${MEDIUM_ALT[work.medium || work.type] || ""}${extra ? ` (${extra})` : ""}`
   );
   config.addFilter("size", (w) =>
     `${w.height} × ${w.width}${w.depth ? ` × ${w.depth}` : ""} ${w.unit || "cm"}`
@@ -49,6 +64,9 @@ export default function (config) {
   const byDate = (a, b) => b.date - a.date || a.fileSlug.localeCompare(b.fileSlug);
   config.addCollection("works", (api) => api.getFilteredByGlob("src/works/*.md").sort(byDate));
   config.addCollection("prints", (api) => api.getFilteredByGlob("src/prints-items/*.md").sort(byDate));
+  config.addCollection("printsOnly", (api) => api.getFilteredByGlob("src/prints-items/*.md").filter((p) => p.data.type !== "card").sort(byDate));
+  config.addCollection("cards", (api) => api.getFilteredByGlob("src/prints-items/*.md").filter((p) => p.data.type === "card").sort(byDate));
+  config.addPassthroughCopy({ "src/_redirects": "_redirects" });
 
   return {
     dir: { input: "src", includes: "_includes", data: "_data", output: "_site" },

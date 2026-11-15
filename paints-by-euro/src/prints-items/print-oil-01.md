@@ -1,10 +1,12 @@
 ---
 title: "Oil I — giclée print"
-work: oil-01
+type: print
 size: "[print size]"
-edition: "[edition size, e.g. open edition / limited to 50]"
+edition: "[edition, e.g. open edition / limited to 50]"
 price: 60
-image: /images/works/oil-01/placeholder-oil-01-main.jpg
+image: /images/products/placeholder-print-oil-01.jpg
 date: 2026-10-20
 ---
 [Paper, printing method and how the print is signed.]
+
+*Placeholder photo: a mock-up made from a public-domain artwork. Replace it with a photo of your own product.*

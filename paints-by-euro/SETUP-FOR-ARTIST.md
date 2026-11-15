@@ -13,7 +13,7 @@ This guide covers three things:
 | Pages CMS | Edit works, prices and status in the browser | Free |
 | Stripe | Card, Apple Pay and Google Pay | No monthly fee; a fee per sale |
 | PayPal | PayPal payments | No monthly fee; a fee per sale |
-| Resend | Order confirmation emails | Free up to 3,000 emails a month |
+| Resend | Order and Print Club emails | Free up to 3,000 emails a month |
 | Cloudflare Web Analytics | Visitor counts with no cookies and no personal data, so no cookie banner | Free |
 | Your own domain, e.g. paintsbyeuro.com | Needed to send emails from your own address | About £10 a year |
 
@@ -40,54 +40,54 @@ Status is one of: **Available**, **Reserved**, **Sold** or **Not for sale**. Che
 ## 3. Placeholders you must replace
 
 ### Photos: replace all of these before you sell anything
-Every placeholder file name starts with `placeholder-`, and its alt text starts with "Placeholder". Sources and licences are listed in `src/images/PLACEHOLDER-SOURCES.md`.
+Every placeholder file name starts with `placeholder-`, and its alt text starts with "Placeholder". Sources and licences are in `src/images/PLACEHOLDER-SOURCES.md`.
 
-- [ ] **The 9 "works" are real paintings and drawings by other artists**, among them Manet, Monet, Cézanne and Breton. They are public-domain images from the Art Institute of Chicago (CC0), used only so you can see the design with real-looking art. Each work page says so. Never sell or present them as your own. Replace each with your own photos: the whole work, a close detail, the side edge and the work in a room.
-- [ ] The "in a room" images use three Pexels room photos (free for commercial use). To make your own, put your photo in `scripts/make-placeholders.mjs`, or simply photograph the work on a wall in daylight.
-- [ ] `about/placeholder-hands.jpg`: replace with a portrait of you, or your own hands at work.
+- [ ] **The 9 "works" are real paintings and pen drawings by other artists**, among them Manet, Monet, Van Gogh and Millet. They are public-domain images from the Art Institute of Chicago (CC0), used only so you can see the design. Each work page says so. Never sell or present them as your own. Replace each with your own photos: the whole piece, a close detail, the side edge and the piece in a room.
+- [ ] **Products:** `products/placeholder-print-oil-01.jpg`, `placeholder-print-oil-05.jpg`, `placeholder-card-oil-03.jpg`, `placeholder-postcard-pen-02.jpg`. These are mock-ups made from the placeholder art. Replace them with photos of your real prints, cards and postcards.
+- [ ] **Print Club:** `print-club/placeholder-bundle-01.jpg` to `-03.jpg`, used on the home page and as "past bundles". Replace with photos of real monthly bundles.
+- [ ] `about/placeholder-hands.jpg` (About page and home page): a portrait of you, or your own hands at work.
 - [ ] `process/placeholder-studio-1.jpg`, `placeholder-studio-2.jpg`: your studio.
-- [ ] `process/placeholder-wip-oil.jpg`, `placeholder-wip-pencil.jpg`: your own works in progress.
+- [ ] `process/placeholder-wip-oil.jpg`, `placeholder-wip-pen.jpg`: your own work in progress.
+
+### Pieces (`src/works/*.md`, or Works in the CMS)
+- [ ] Titles "Oil I" to "Oil V" and "Pen I" to "Pen IV", with their years, prices and statuses (invented examples). The materials and sizes are those of the placeholder images.
+- [ ] Each piece's text: "[A sentence or two about this piece…]", and the italic placeholder-image credit under it.
+- [ ] Which piece is **Featured** on the home page (now Oil I).
+
+### Prints, cards and postcards (`src/prints-items/*.md`, or "Prints, cards and postcards" in the CMS)
+- [ ] 2 prints and 2 cards with example titles and prices (£60, £75, £4, £2): [print size], [edition], [card size], [postcard size], and the description of paper and printing.
 
 ### Settings (`src/_data/site.json`, or Settings in the CMS)
-- [ ] `[Artist name]` (appears on Home and About and in search descriptions)
-- [ ] **Home page tagline.** It is set to option 1. Choose one (it's in Settings):
-  1. "Oil and graphite, made slowly by hand." (in use now)
-  2. "Paint, pencil, paper, patience."
-  3. "Quiet work in oil and pencil."
-- [ ] `[artist email]`
-- [ ] Social links: `instagram.com/[handle]`, `facebook.com/[page]`
-- [ ] **Currency:** set to `GBP` as a placeholder. Change it to your currency, e.g. EUR or USD.
-- [ ] **[tax rule]:** see "Sales tax or VAT" below
-- [ ] Shipping regions: `[Home country]` label and country code (now `GB`); the Europe list
-- [ ] **Shipping costs** 25 / 45 / 80. These are example numbers and the checkout uses them, so set your real costs.
-- [ ] Cloudflare Web Analytics token (empty = no analytics)
+- [ ] `[Artist name]`, `[artist email]`, social links (`instagram.com/[handle]`, `facebook.com/[page]`)
+- [ ] **Home page introduction**: option 1 is in use. All three options are in Settings, and in the reply that came with this change.
+- [ ] **Home page artist statement**: option 1 is in use. It contains [subjects the artist paints] and [home city].
+- [ ] **Tagline**: "Oil and ink, made slowly by hand." I changed "graphite" to "ink" because pencil is no longer one of your mediums. The other options are "Paint, pen, paper, patience." and "Quiet work in oil and pen."
+- [ ] **Currency**: GBP is a placeholder.
+- [ ] **[tax rule]**: see "Sales tax or VAT" below.
+- [ ] **Shipping regions and costs** (25 / 45 / 80 are example numbers that checkout uses).
+- [ ] **Print Club text**: [monthly price], [price of the 3 items bought one at a time], [saving], [print size], [shipping cost], [shipping countries], [billing date]. Also set **Billing day** (a number, 1–28; now 1) and the **shipping country codes** (now GB). The amount actually charged is set in Stripe and PayPal (section 9), so keep the two the same.
+- [ ] **Gift plans**: hidden. Switch on "Show gift plans" only after you create the gift prices and plans (section 9). Also fill in [3-month gift price] and [12-month gift price].
+- [ ] **Exhibitions and news**: empty, so the home page hides this section. Add an event (name, date as YYYY-MM-DD, date as shown, place) to show the next one.
+- [ ] Cloudflare Web Analytics token (empty = no analytics).
 
 ### About page (`src/about.njk`)
-- [ ] [artist name], [home city], [subjects the artist paints], [year started], [training or self-taught]
-- [ ] Check that the reasons given for using oil and pencil are true for you. I wrote them; change them freely. Keep the text to 120–180 words (now 145).
+- [ ] [artist name], [home city], [subjects the artist paints], [year started], [training or self-taught].
+- [ ] Check that the reasons given for oil paint and pen sketches are true for you. I wrote them. Keep the text to 120–180 words (now 157).
 
 ### Process page (`src/process.njk`)
-- [ ] The two short texts: [the surface], [first step], [stage], [time], [paper and pencils], [technique]
-- [ ] Photo captions
+- [ ] Oil: [the surface], [first step], [stage], [time]. Pen: [paper and pen], [first step], [how you handle mistakes], [time]. Also the photo captions.
 
-### Contact page (`src/contact.njk`)
-- [ ] [reply time]
-- [ ] Commissions: [starting price], [smallest size], [largest size], [deposit], [time]
+### Commission & Contact page (`src/commission-contact.njk`)
+- [ ] [reply time], [starting price], [smallest size], [largest size], [deposit], [time].
+
+### Print Club page (`src/print-club/index.njk`)
+- [ ] Questions: [number] working days to post, [delivery time]. Past bundles: [Month and year] under each photo.
 
 ### Shipping and returns (`src/shipping-returns.njk`)
-- [ ] Countries, costs per region for oil and pencil (these must match the costs in Settings), delivery times, customs, dispatch time, packing, courier, returns period, who pays for returns, commission returns, damage reporting period
+- [ ] Countries, costs per region for oil, pen sketches and prints/cards (these must match the costs in Settings), delivery times, customs, dispatch time, packing, courier, returns period, who pays for returns, commission returns, damage reporting period.
 
 ### Terms of sale and privacy policy (`src/terms.njk`, `src/privacy.njk`)
-- [ ] Both are drafts marked "Draft – the artist must check this text". Fill in your legal name, address, email, currency, the cancellation rights in your country, commission terms, governing law, how long you keep data, your email provider and your data protection authority. Have them checked, then remove the draft line.
-
-### Prints (optional, hidden now)
-- [ ] `src/prints-items/print-oil-01.md`: [print size], [edition], price 60 (example), description. Also the intro text in `src/prints.njk`.
-- [ ] Turn on **Prints page** in Settings when you are ready. The link then appears in the footer, and prints use the same checkout.
-
-### Design
-- [ ] Accent colour: ultramarine `#2B3C9B` is a stand-in. Pick a pigment from your own paintings and I can set it everywhere.
-
----
+- [ ] Both are drafts marked "Draft – the artist must check this text". Both now include a Print Club section. Fill in your legal name, address, email, currency, cancellation rights, commission terms, [price change notice for Print Club members], governing law, retention periods, email provider and data protection authority. Have them checked, then remove the draft line.
 
 ## 4. Sales tax or VAT: a question for you
 
@@ -167,6 +167,40 @@ The site refuses live keys until you deliberately switch them on. Do this only w
 
 Never paste keys into the code, the CMS or a chat. They belong only in Netlify's environment variables.
 
+## 9. Print Club subscriptions
+
+The Print Club uses **Stripe Billing** (subscriptions) and **PayPal Subscriptions**. Do everything in test mode or the PayPal sandbox first.
+
+### Stripe Billing (test mode)
+1. **Products → Add product**: "Print Club". Add a **recurring** price: monthly, in your currency, for the monthly amount. Under **Advanced**, set the **lookup key** to `print_club_monthly`.
+2. Optional gift plans: add two more recurring prices to the same product. The first is every 3 months, with lookup key `print_club_gift_3`. The second is every 12 months, with lookup key `print_club_gift_12`. Each gift is charged once; the site then sets it to end after that period.
+3. **Settings → Billing → Customer portal**: turn on **Customers can update shipping address**, **update payment methods** and **cancel subscriptions** (choose "at the end of the billing period"). Save.
+4. **Developers → Webhooks → your existing endpoint** (`/api/stripe/webhook`): add these events: `invoice.paid`, `customer.subscription.updated`, `customer.subscription.deleted`, `customer.updated`. Keep the existing events.
+5. Test: on the Print Club page, choose **Join with card** and pay with `4242 4242 4242 4242`. Because the first charge is on the next billing date, there is nothing to pay at sign-up. To see a payment at once in test mode, use **Billing → Subscriptions → (the subscription) → … → Advance test clock**, or temporarily set the billing day to tomorrow. Then check that both emails arrive and that the member appears at `/print-club/admin/`.
+
+### PayPal Subscriptions (sandbox)
+1. In developer.paypal.com (sandbox), or in your sandbox business account under **Pay & Get Paid → Subscriptions**, create a product "Print Club".
+2. Create a **plan**: monthly, the monthly amount, no end date (infinite cycles). Copy its plan ID (starts `P-`) into Netlify as `PAYPAL_PLAN_MONTHLY`.
+3. Optional gift plans: a plan that bills once every 3 months for 1 cycle (`PAYPAL_PLAN_GIFT_3`), and one that bills once every 12 months for 1 cycle (`PAYPAL_PLAN_GIFT_12`).
+4. On your existing webhook (`/api/paypal/webhook`), add these events: `Billing subscription activated`, `Billing subscription updated`, `Billing subscription cancelled`, `Billing subscription expired`, `Billing subscription suspended`, `Payment sale completed`.
+5. Test with your sandbox personal account. The first payment is taken on the billing date.
+
+### Member self-service and your member list
+1. In Netlify, add `CLUB_LINK_SECRET`: a long random text of 32 or more characters. It signs the "Manage my Print Club" email links.
+2. Add `CLUB_ADMIN_PASSWORD`: a password of 10 or more characters. You use it at `/print-club/admin/` to see each month's members and addresses, and to download them as a CSV file.
+3. Members can change their address, skip one month or cancel from **Manage my Print Club** in the footer. They get an email link; there's no account to create. Card members use the Stripe portal. PayPal members change their address on the site and cancel in PayPal.
+
+### Changing the price (no code)
+- **Stripe:** add a new monthly price to the Print Club product and move the lookup key `print_club_monthly` to it ("Transfer lookup key"). New members pay the new price. **Current members keep their old price** until you move them yourself, in Stripe under each subscription → Update subscription.
+- **PayPal:** create a new plan at the new price and put its ID in `PAYPAL_PLAN_MONTHLY`. Current members stay on the old plan until you change them.
+- Then update the price text in Settings → Print Club.
+
+### Going live with the Print Club
+Do this at the same time as section 8:
+- create the live Stripe prices with the same lookup keys, and set up the live customer portal;
+- create live PayPal plans and put their IDs in the `PAYPAL_PLAN_…` variables;
+- add the new webhook events to the live webhooks.
+
 ## All environment variables
 
 | Name | Example | Needed for |
@@ -180,4 +214,8 @@ Never paste keys into the code, the CMS or a chat. They belong only in Netlify's
 | `RESEND_API_KEY` | `re_…` | Emails |
 | `EMAIL_FROM` | `Paints by Euro <orders@…>` | Emails |
 | `ARTIST_EMAIL` | `you@…` | Emails |
+| `PAYPAL_PLAN_MONTHLY` | `P-…` | Print Club (PayPal) |
+| `PAYPAL_PLAN_GIFT_3`, `PAYPAL_PLAN_GIFT_12` | `P-…` | Optional gift plans (PayPal) |
+| `CLUB_LINK_SECRET` | 32+ random characters | Print Club member links |
+| `CLUB_ADMIN_PASSWORD` | 10+ characters | Print Club member list |
 | `ALLOW_LIVE_PAYMENTS` | `true` (only when going live) | Live payments |

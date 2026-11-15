@@ -2,12 +2,16 @@
 import { verifyPayPalWebhook, paypal, unpackCustom, paypalAddress } from "./_lib/paypal.mjs";
 import { completeSale, cancelHold } from "./_lib/sales.mjs";
 import { handler, json } from "./_lib/http.mjs";
+import { handlePayPalClub } from "./_lib/club-events.mjs";
 
 export default handler("POST", async (req) => {
   const raw = await req.text();
   let event;
   try { event = JSON.parse(raw); } catch { return json({ error: "Bad request" }, 400); }
   if (!(await verifyPayPalWebhook(req.headers, event))) return json({ error: "Invalid signature" }, 400);
+
+  // Print Club subscriptions
+  if (await handlePayPalClub(event)) return json({ received: true });
 
   const cap = event.resource || {};
   const c = unpackCustom(cap.custom_id);

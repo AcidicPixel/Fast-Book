@@ -51,7 +51,7 @@ bodyClass: page-work-detail
 
     <div class="work-actions">
       <a class="btn btn-solid" href="/checkout/?work={{ slug }}" data-buy {% if status != "Available" %}hidden{% endif %}>Buy</a>
-      <a class="btn btn-line" href="/contact/?subject=Purchase&amp;work={{ title | urlencode }}">Make an enquiry</a>
+      <a class="btn btn-line" href="/commission-contact/?subject=Purchase&amp;work={{ title | urlencode }}">Make an enquiry</a>
     </div>
     <p class="fine" data-buy-note {% if status != "Available" %}hidden{% endif %}>
       Original, one only. Shipping is added at checkout. Pay by card through Stripe or with PayPal.
@@ -62,9 +62,9 @@ bodyClass: page-work-detail
     <nav class="work-pager" aria-label="More work">
       {%- set prev = all | getPreviousCollectionItem(page) %}
       {%- set next = all | getNextCollectionItem(page) %}
-      {%- if prev %}<a class="pencil" href="{{ prev.url }}" rel="prev">← {{ prev.data.title }}</a>{% else %}<span></span>{% endif %}
-      <a class="pencil" href="/work/">All work</a>
-      {%- if next %}<a class="pencil" href="{{ next.url }}" rel="next">{{ next.data.title }} →</a>{% else %}<span></span>{% endif %}
+      {%- if prev %}<a class="line-link" href="{{ prev.url }}" rel="prev">← {{ prev.data.title }}</a>{% else %}<span></span>{% endif %}
+      <a class="line-link" href="/collections/">All collections</a>
+      {%- if next %}<a class="line-link" href="{{ next.url }}" rel="next">{{ next.data.title }} →</a>{% else %}<span></span>{% endif %}
     </nav>
   </div>
 </article>

@@ -7,10 +7,10 @@ noindex: true
 <section class="message-page">
   <h1 class="page-title" data-thanks-title>Thank you</h1>
   <p class="lede" data-thanks-text>Your message has been sent. I will reply by email.</p>
-  <p><a class="pencil" href="/work/">Back to the work</a></p>
+  <p><a class="line-link" href="/collections/">Back to the collections</a></p>
 </section>
 <script>
   if (new URLSearchParams(location.search).get("form") === "newsletter") {
-    document.querySelector("[data-thanks-text]").textContent = "You are signed up. I will email you about new work and exhibitions.";
+    document.querySelector("[data-thanks-text]").textContent = "You are signed up. I will email you about new pieces and exhibitions.";
   }
 </script>

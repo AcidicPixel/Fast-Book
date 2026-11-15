@@ -1,47 +1,127 @@
 ---
 layout: layouts/base.njk
 bodyClass: page-home
-description: "Original oil paintings and pencil drawings. See the work, buy originals and ask about commissions."
+description: "Original oil paintings and pen sketches, prints, cards and postcards. Browse the collections, join the monthly Print Club or start a commission."
 ---
 {%- set featured = null %}
 {%- for w in collections.works %}{% if w.data.featured and not featured %}{% set featured = w %}{% endif %}{% endfor %}
 {%- if not featured %}{% set featured = collections.works[0] %}{% endif %}
 {%- set f = featured.data %}
-<h1 class="visually-hidden">{{ site.name }}: oil paintings and pencil drawings</h1>
+<h1 class="visually-hidden">{{ site.name }}: oil paintings, pen sketches, prints and cards</h1>
 
-<section class="hero" aria-label="Featured work">
-  <div class="hero-stick">
-    <figure class="hero-figure" data-work="{{ featured.fileSlug }}">
-      <a href="{{ featured.url }}" aria-label="{{ f.title }}: details">
-        {% picture f.image, f | altText, "large", "(min-width: 64em) 64rem, 100vw", "", true %}
-      </a>
-    </figure>
-    <div class="hero-text">
-      <p class="hero-caption"><span class="t">{{ f.title }}</span> <span>{{ f.materials }}, {{ f.year }}</span></p>
-      <p class="hero-tagline">{{ site.tagline }}</p>
-      <a class="text-link" href="/work/">View the work →</a>
-    </div>
+{#- 1. Hero: featured work (7 of 12 columns) + introduction #}
+<section class="home-hero" aria-label="Featured work and introduction">
+  <figure class="hero-figure" data-work="{{ featured.fileSlug }}">
+    <a href="{{ featured.url }}" aria-label="{{ f.title }}: details">
+      {% picture f.image, f | altText, "large", "(min-width: 64em) 56vw, 100vw", "", true %}
+    </a>
+    <figcaption class="hero-caption"><span class="t">{{ f.title }}</span> <span>{{ f.medium | mediumLabel }}, {{ f.year }}</span></figcaption>
+  </figure>
+  <div class="hero-text">
+    <p class="hero-intro">{{ site.intro }}</p>
+    <p class="hero-tagline">{{ site.tagline }}</p>
+    <a class="text-link" href="/collections/">View the collections →</a>
   </div>
 </section>
 
-<section class="recent" aria-labelledby="recent-title">
-  <div class="section-head">
-    <h2 id="recent-title" class="eyebrow" data-reveal-text>Recent work</h2>
-    <a class="pencil" href="/work/">All work</a>
+{#- 2. Mini About #}
+<section class="home-section mini-about" aria-labelledby="about-title">
+  <figure class="mini-about-photo" data-reveal>
+    {% picture "/images/about/placeholder-hands.jpg", "Placeholder: hands at work, sketching faces in a sketchbook with a pen", "thumb", "(min-width: 64em) 22vw, 60vw" %}
+  </figure>
+  <div class="mini-about-text">
+    <h2 id="about-title" class="eyebrow" data-reveal-text>About the artist</h2>
+    <p class="statement" data-reveal-text>{{ site.statement }}</p>
+    <a class="text-link" href="/about/">Read more →</a>
   </div>
-  <ul class="recent-grid" role="list">
-    {%- set n = 0 %}
-    {%- for w in collections.works %}{% if w.url != featured.url and n < 4 %}{% set n = n + 1 %}
-    <li class="recent-item recent-{{ n }}" data-work="{{ w.fileSlug }}" data-status="{{ w.data.status | statusKey }}" data-reveal-scope>
+</section>
+
+{#- 3. The Collections: one tile per medium #}
+{%- set tileImages = {
+  oil: "/images/works/oil-05/placeholder-oil-05-main.jpg",
+  pen: "/images/works/pen-02/placeholder-pen-02-main.jpg",
+  print: "/images/products/placeholder-print-oil-01.jpg",
+  card: "/images/products/placeholder-card-oil-03.jpg"
+} %}
+<section class="home-section" aria-labelledby="collections-title">
+  <div class="section-head">
+    <h2 id="collections-title" class="section-title" data-reveal-text>The Collections</h2>
+    <a class="line-link" href="/collections/">All collections</a>
+  </div>
+  <ul class="tiles" role="list">
+    {%- for m in mediums %}
+    <li data-reveal-scope>
+      <a class="tile" href="/collections/?medium={{ m.key }}">
+        <span class="tile-frame" data-reveal>{% picture tileImages[m.key], "Placeholder: " + m.name, "thumb", "(min-width: 64em) 22vw, 46vw" %}</span>
+        <span class="tile-name" data-reveal-line>{{ m.name }}</span>
+      </a>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+
+{#- 4. New Work: the newest originals #}
+<section class="home-section" aria-labelledby="new-title">
+  <div class="section-head">
+    <h2 id="new-title" class="section-title" data-reveal-text>New Work</h2>
+    <a class="line-link" href="/collections/">All collections</a>
+  </div>
+  <ul class="new-grid" role="list">
+    {%- for w in collections.works | head(6) %}
+    <li data-work="{{ w.fileSlug }}" data-status="{{ w.data.status | statusKey }}" data-reveal-scope>
       <a href="{{ w.url }}" class="card-link">
-        <span class="card-frame" data-reveal>{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 30vw, 90vw" %}</span>
+        <span class="card-frame" data-reveal>{% picture w.data.image, w.data | altText, "thumb", "(min-width: 64em) 28vw, 46vw" %}</span>
         <span class="card-caption">
           <span class="card-title" data-reveal-line>{{ w.data.title }}</span>
-          <span class="card-meta" data-reveal-line>{{ w.data.medium | mediumLabel }}, {{ w.data.year }}</span>
           <span class="status" data-status-label data-reveal-line>{{ w.data.status }}</span>
         </span>
       </a>
     </li>
-    {%- endif %}{% endfor %}
+    {%- endfor %}
   </ul>
+</section>
+
+{#- 5. Print Club #}
+<section class="home-section club-panel" aria-labelledby="club-title">
+  <figure class="club-photo" data-reveal>
+    {% picture "/images/print-club/placeholder-bundle-01.jpg", "Placeholder: a Print Club bundle with a print, a card and a postcard", "large", "(min-width: 64em) 50vw, 100vw" %}
+  </figure>
+  <div class="club-text">
+    <h2 id="club-title" class="section-title" data-reveal-text>Print Club</h2>
+    <p data-reveal-text>Every month, a small bundle of new art arrives at your door: one print, one card and one postcard, for {{ site.printClub.price }} a month. Skip a month or cancel whenever you like.</p>
+    <a class="btn btn-solid" href="/print-club/">Join the Print Club →</a>
+  </div>
+</section>
+
+{#- 6. Commissions #}
+<section class="home-section commission-line" aria-labelledby="commission-title">
+  <h2 id="commission-title" class="visually-hidden">Commissions</h2>
+  <p class="commission-text" data-reveal-text>I take commissions in oil paint and pen: a place, a person or a view that matters to you.</p>
+  <a class="text-link" href="/commission-contact/?subject=Commission">Start a commission →</a>
+</section>
+
+{#- 7. Exhibitions and news: only when there is an upcoming event #}
+{%- set upcoming = site.events | upcoming %}
+{%- if upcoming.length %}
+{%- set ev = upcoming[0] %}
+<section class="home-section event" aria-labelledby="event-title">
+  <h2 id="event-title" class="section-title" data-reveal-text>Exhibitions and news</h2>
+  <p class="event-line" data-reveal-text><strong>{{ ev.name }}</strong> · {{ ev.dateText or ev.date }} · {{ ev.place }}</p>
+  {%- if ev.url %}<a class="line-link" href="{{ ev.url }}">Details</a>{% endif %}
+</section>
+{%- endif %}
+
+{#- 8. Newsletter #}
+<section class="home-section home-newsletter" aria-labelledby="newsletter-title">
+  <form class="newsletter" name="newsletter" method="POST" action="/thanks/?form=newsletter" data-netlify="true" netlify-honeypot="company">
+    <input type="hidden" name="form-name" value="newsletter">
+    <p class="hp"><label>Leave empty <input name="company" tabindex="-1" autocomplete="off"></label></p>
+    <h2 id="newsletter-title" class="section-title">Newsletter</h2>
+    <label class="newsletter-label" for="home-newsletter-email">New pieces, Print Club news and exhibitions, by email</label>
+    <div class="newsletter-row">
+      <input id="home-newsletter-email" type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+      <button type="submit" class="btn btn-quiet">Sign up</button>
+    </div>
+    <p class="fine">A few emails a year. Unsubscribe any time. See the <a class="line-link" href="/privacy/">privacy policy</a>.</p>
+  </form>
 </section>

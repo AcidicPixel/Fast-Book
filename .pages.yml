@@ -17,8 +17,8 @@ content:
       sort: [date, title]
     fields:
       - { name: title, label: Title, type: string, required: true }
-      - { name: medium, label: Medium, type: select, required: true, options: { values: [oil, pencil] }, description: "oil = Oil Paintings filter, pencil = Pencil Drawings filter" }
-      - { name: materials, label: "Materials (shown as Medium)", type: string, description: "e.g. Oil on linen, Graphite pencil on paper" }
+      - { name: medium, label: Medium, type: select, required: true, options: { values: [oil, pen] }, description: "oil = Oil Paint, pen = Pen Sketches" }
+      - { name: materials, label: "Materials (shown as Medium)", type: string, description: "e.g. Oil on linen, Pen and ink on paper" }
       - { name: year, label: Year, type: number }
       - { name: height, label: "Height", type: number }
       - { name: width, label: "Width", type: number }
@@ -36,7 +36,7 @@ content:
       - { name: body, label: "About this work", type: text }
 
   - name: prints
-    label: Prints (hidden until switched on in Settings)
+    label: Prints, cards and postcards
     type: collection
     path: paints-by-euro/src/prints-items
     filename: "{primary}.md"
@@ -44,9 +44,9 @@ content:
     view: { fields: [title, price], primary: title }
     fields:
       - { name: title, label: Title, type: string, required: true }
-      - { name: work, label: "Original work (file name, e.g. oil-01)", type: string }
+      - { name: type, label: Type, type: select, required: true, options: { values: [print, card] }, description: "print = Prints, card = Cards & Postcards" }
       - { name: size, label: Print size, type: string }
-      - { name: edition, label: Edition, type: string }
+      - { name: edition, label: "Edition, or Card / Postcard", type: string }
       - { name: price, label: Price, type: number }
       - { name: image, label: Photo, type: image }
       - { name: date, label: Date added, type: date }
@@ -62,6 +62,10 @@ content:
       - { name: artistName, label: Artist name, type: string }
       - { name: tagline, label: "Home page tagline (8 words or fewer)", type: string }
       - { name: taglineOptions, label: "Tagline options (for reference)", type: string, list: true }
+      - { name: intro, label: "Home page introduction (30–50 words)", type: text }
+      - { name: introOptions, label: "Introduction options (for reference)", type: text, list: true }
+      - { name: statement, label: "Home page artist statement (40–60 words)", type: text }
+      - { name: statementOptions, label: "Statement options (for reference)", type: text, list: true }
       - { name: description, label: "Search engine description", type: text }
       - { name: email, label: Email, type: string }
       - { name: currency, label: "Currency (3-letter code, e.g. GBP, EUR, USD)", type: string }
@@ -91,6 +95,36 @@ content:
         type: object
         fields:
           - { name: enabled, label: Show the Prints page, type: boolean }
+      - name: printClub
+        label: Print Club (text shown on the site; the price charged is set in Stripe and PayPal)
+        type: object
+        fields:
+          - { name: price, label: Monthly price, type: string }
+          - { name: separatePrice, label: "Price of the 3 items bought one at a time", type: string }
+          - { name: saving, label: Saving, type: string }
+          - { name: printSize, label: Print size, type: string }
+          - { name: shippingCost, label: Shipping cost, type: string }
+          - { name: shippingCountriesText, label: Shipping countries (text), type: string }
+          - { name: countries, label: "Shipping country codes (e.g. GB)", type: string, list: true }
+          - { name: billingDateText, label: "Billing date (text, e.g. 1st)", type: string }
+          - { name: billingDay, label: "Billing day of the month (1–28)", type: number }
+          - name: gifts
+            label: Gift plans
+            type: object
+            fields:
+              - { name: enabled, label: Show gift plans, type: boolean }
+              - { name: threeMonthPrice, label: 3-month gift price, type: string }
+              - { name: twelveMonthPrice, label: 12-month gift price, type: string }
+      - name: events
+        label: Exhibitions, fairs and markets (the home page shows the next one; hidden when empty)
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Name, type: string }
+          - { name: date, label: "Date (YYYY-MM-DD)", type: string }
+          - { name: dateText, label: "Date as shown (e.g. 3–5 May 2027)", type: string }
+          - { name: place, label: Place, type: string }
+          - { name: url, label: Link (optional), type: string }
       - name: analytics
         label: Analytics
         type: object

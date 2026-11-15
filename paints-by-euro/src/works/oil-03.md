@@ -17,6 +17,6 @@ detail: /images/works/oil-03/placeholder-oil-03-detail.jpg
 edge: /images/works/oil-03/placeholder-oil-03-edge.jpg
 room: /images/works/oil-03/placeholder-oil-03-room.jpg
 ---
-[A sentence or two about this work: what it shows, where it was made, what you were looking at.]
+[A sentence or two about this piece: what it shows, where it was made, what you were looking at.]
 
-*Placeholder image: Pieter Claesz, Still Life, c. 1625. Art Institute of Chicago, public domain (CC0). Replace it with a photo of your own work.*
+*Placeholder image: Pieter Claesz, Still Life, c. 1625. Art Institute of Chicago, public domain (CC0). Replace it with a photo of your own piece.*

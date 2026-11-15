@@ -1,6 +1,6 @@
 # Paints by Euro
 
-Portfolio and shop for an artist who works in oil paint and pencil.
+Portfolio and shop for an artist who works in oil paint and pen, with prints, cards, postcards and a monthly Print Club.
 Static site (Eleventy) + Netlify serverless functions for Stripe Checkout and PayPal.
 
 The artist's setup guide, the list of placeholders to replace and the steps to go live are in **[SETUP-FOR-ARTIST.md](SETUP-FOR-ARTIST.md)**.
@@ -8,30 +8,33 @@ The artist's setup guide, the list of placeholders to replace and the steps to g
 ## Site map
 
 ```
-/                         Home: featured work, who the artist is, 4 recent works
-/work/                    Work: grid of all works, filters (medium; all/available), full-screen zoom viewer
-/work/<slug>/             Work detail: one page per work, facts, extra-photo slider, Buy / Make an enquiry
-/about/                   About (first person, placeholders for facts)
-/process/                 Process: studio photos, how an oil painting / a pencil drawing starts
-/contact/                 Contact form, how commissions work, social links
-/shipping-returns/        Shipping costs, countries, delivery times, returns (placeholders)
-/terms/                   Terms of sale (draft)
-/privacy/                 Privacy policy (draft)
-/prints/                  Prints (hidden until prints.enabled = true in Settings)
-/checkout/?work=<slug>    Checkout step: shipping region, total, Stripe + PayPal side by side (noindex)
-/checkout/cancelled/      Stripe "back" page: releases the 30-minute hold (noindex)
-/thank-you/               After payment: "being confirmed" (noindex)
-/thanks/                  After a contact / newsletter form (noindex)
-/404.html, /sitemap.xml, /robots.txt, /catalog.json
+/                          Home: hero (work + introduction), about the artist, the four collections,
+                           new work, Print Club, commissions, next event (hidden if none), newsletter
+/collections/              All pieces; filters Medium (All, Oil Paint, Pen Sketches, Prints, Cards & Postcards)
+                           and Show (All, Available); ?medium=oil|pen|print|card preselects; zoom viewer
+/collections/<slug>/       One page per original: facts, photo slider, Buy / Make an enquiry
+/prints/                   Prints, and Cards & Postcards (each with #slug anchor and Buy)
+/print-club/               Monthly bundle (1 print, 1 card, 1 postcard): price, saving, join, past bundles, Q&A
+/print-club/manage/        Members: email link → change address, skip a month, cancel (noindex)
+/print-club/admin/         Artist: this month's members and addresses, CSV export (password; noindex)
+/print-club/welcome/       After sign-up (noindex)
+/about/  /process/
+/commission-contact/       Commissions first, then the contact form (subjects include Print Club)
+/shipping-returns/  /terms/ (draft)  /privacy/ (draft)
+/checkout/  /checkout/cancelled/  /thank-you/  /thanks/  /404.html  /sitemap.xml  /catalog.json
 
-/api/status                    GET   live status of every work
-/api/config                    GET   public checkout settings (no secrets)
-/api/stripe/create-session     POST  hold work 30 min → Stripe Checkout URL
-/api/stripe/webhook            POST  verified Stripe events → Sold + emails / release hold
-/api/paypal/create-order       POST  hold work 30 min → PayPal order
-/api/paypal/capture-order      POST  capture if hold valid and address in region
-/api/paypal/webhook            POST  verified PayPal events → Sold + emails
-/api/release                   POST  buyer cancelled → release hold
+Old addresses (301 via _redirects, plus fallback pages): /work → /collections, /work/<slug>/ → /collections/<slug>/,
+/work/pencil-0N/ → /collections/pen-0N/, /contact → /commission-contact
+
+/api/club/config                 GET   public Print Club settings
+/api/club/stripe-checkout        POST  Stripe Billing subscription (Checkout)
+/api/club/paypal-subscription    POST  PayPal subscription
+/api/club/manage-link            POST  email a one-hour sign-in link
+/api/club/me | portal | skip | address   member self-service
+/api/club/members                GET   artist list (JSON / CSV), Authorization: Bearer CLUB_ADMIN_PASSWORD
+club-resume                      daily scheduled: resumes PayPal members after a skipped month
+/api/stripe/webhook, /api/paypal/webhook also handle subscription events
+(plus the original-artwork checkout endpoints: /api/status, /api/config, /api/stripe/*, /api/paypal/*, /api/release)
 ```
 
 ## Design system
@@ -43,17 +46,19 @@ The artist's setup guide, the list of placeholders to replace and the steps to g
 | `--paper` | `#F4EFE6` warm off-white | background on every page | — |
 | `--graphite` | `#1E1C19` | text | 14.8:1 (13.7 on darkest texture) |
 | `--graphite-soft` | `#45423C` | secondary text | 8.7:1 (8.1) |
-| `--pigment` | `#2A3990` ultramarine | the one accent: hover, focus, "Available" | 8.8:1 (8.1) |
+| `--accent` | `#9A4526` dark clay | the one accent: buttons, link lines, hover, focus, small details (dots) | 5.6:1 (5.2) |
 | `--rule` | `#CFC7B9` | hairlines only, never text | — |
 
-The pigment is a placeholder. Set it to a pigment from the artist's own paintings (`--pigment` in `src/assets/css/site.css`, plus the hex in the `--pencil-pigment` SVG and the favicon).
+There is no blue anywhere on the site. Body text stays graphite (7:1 or more). Clay is used only where 4.5:1 is enough: buttons, link lines, hover states and small details. The hex also appears in the `--line-accent` SVG and the favicon.
 
 **Background.** `#F4EFE6`, plus a seamless 640 px handmade-paper tile (`src/assets/paper-texture.webp`, 28 KB) with fibres and uneven tone. It sits at 6% opacity on a fixed layer behind all content, so it is never on top of artwork. Rebuild it with `node scripts/make-paper-texture.mjs`.
 
 **Type.** Two self-hosted families, so no third-party font requests.
 - Headings: *Fraunces*, weight 500 (italic for the wordmark and work titles in captions).
-- Body: *Source Sans 3*, weight 400, line height 1.6.
-- Scale: 18 (the minimum for any text) · 22 · 28–36 · 36–56 · 44–80 px.
+- Body: *Source Sans 3*, weight 400, line height 1.6, 18 px on phones rising to 20 px on desktop.
+- Wordmark: Fraunces 500, upright, 27 px, letter spacing 0.03em (fits at 320 px).
+- Scale: 18–20 (the minimum for any text) · 25 · 31–40 · 40–62 · 48–90 px.
+- Home sections are 64 px apart on phones, 80 px on tablets and 112 px on desktop.
 
 **Space.** 4 · 8 · 16 · 24 · 40 · 64 · 104 · 160 px (`--s-1` … `--s-8`). Side gutter 16–64 px. Content max width 1440 px. A 12-column grid places work off-centre.
 
@@ -67,10 +72,10 @@ The pigment is a placeholder. Set it to a pigment from the artist's own painting
 
 ## Content and images
 
-- Works: one Markdown file per work in `src/works/` (edited through Pages CMS, see `.pages.yml` at the repo root).
+- Originals: one Markdown file per piece in `src/works/` (medium `oil` or `pen`). Prints, cards and postcards: `src/prints-items/` (type `print` or `card`). Both are (edited through Pages CMS, see `.pages.yml` at the repo root).
 - Settings: `src/_data/site.json` (currency, shipping, tax line, socials, prints switch, analytics).
 - Photos: put JPG or PNG files in `src/images/`. The build makes WebP at 480, 1024 and 2048 px wide (never enlarged). 1024 and 2048 get a small watermark; the 480 thumbnail does not. All images except the first on a page are lazy-loaded.
-- Alt text is generated as "Title, oil painting" / "Title, pencil drawing (close detail)".
+- Alt text is generated as "Placeholder: Title, oil painting" / "Title, pen sketch (close detail)" / "Title, print" / "Title, card".
 - `npm run placeholders` rebuilds the placeholder photos from their sources (Art Institute of Chicago CC0 artworks; Pexels room and studio photos). Sources and licences: `src/images/PLACEHOLDER-SOURCES.md`.
 
 ## Live status (Reserved / Sold)

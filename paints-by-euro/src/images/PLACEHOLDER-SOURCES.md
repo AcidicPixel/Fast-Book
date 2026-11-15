@@ -14,10 +14,10 @@ All from the Art Institute of Chicago open-access collection. Public domain, rel
 | works/oil-03/placeholder-oil-03-*.jpg | Pieter Claesz, Still Life, c. 1625, oil on panel | 48 × 76 cm | https://www.artic.edu/artworks/21682 |
 | works/oil-04/placeholder-oil-04-*.jpg | Jules Breton, The Song of the Lark, 1884, oil on canvas | 110 × 85 cm | https://www.artic.edu/artworks/94841 |
 | works/oil-05/placeholder-oil-05-*.jpg | Claude Monet, Water Lilies, 1906, oil on canvas | 89 × 94 cm | https://www.artic.edu/artworks/16568 |
-| works/pencil-01/placeholder-pencil-01-*.jpg | Théodore Chassériau, Portrait of the Baroness Chassériau, 1846, graphite on cream wove paper | 31 × 23 cm | https://www.artic.edu/artworks/72529 |
-| works/pencil-02/placeholder-pencil-02-*.jpg | Paul Cézanne, L'Estaque, 1870/72, graphite on ivory wove paper | 24 × 31 cm | https://www.artic.edu/artworks/113705 |
-| works/pencil-03/placeholder-pencil-03-*.jpg | Sir Edward Burne-Jones, Study for Figure of 'Idleness', c. 1873–77, graphite on ivory wove paper | 25 × 17 cm | https://www.artic.edu/artworks/78908 |
-| works/pencil-04/placeholder-pencil-04-*.jpg | William Michael Harnett, Still Life Sketch, n.d., graphite and pen and brown ink on cream laid paper | 20 × 13 cm | https://www.artic.edu/artworks/156302 |
+| works/pen-01/placeholder-pen-01-*.jpg | Baccio Bandinelli, Two Studies of the Head of a Youth, c. 1550, pen and brown ink on tan paper | 23 × 25 cm | https://www.artic.edu/artworks/145830 |
+| works/pen-02/placeholder-pen-02-*.jpg | Vincent van Gogh, Landscape at Arles, 1888, pen and brown ink over graphite on cream wove paper | 25 × 33 cm | https://www.artic.edu/artworks/133605 |
+| works/pen-03/placeholder-pen-03-*.jpg | Constantin Guys, Three-Quarter Length Portrait of a Woman, 1865/70, pen and brown ink with brush and grey wash | 28 × 19 cm | https://www.artic.edu/artworks/13572 |
+| works/pen-04/placeholder-pen-04-*.jpg | Jean-François Millet, Landscape – Hillside in Gruchy, Normandy, 1869/70, pen and brown ink on cream laid paper | 30 × 36 cm | https://www.artic.edu/artworks/136977 |
 
 The close detail is a crop of the same image. The side edge is a rendering made from it. The in-a-room image places it in one of the rooms below.
 
@@ -27,9 +27,9 @@ Photos from Pexels under the **Pexels License** (free for commercial use; no att
 
 | Room | Photo | Scale reference | Works |
 |---|---|---|---|
-| A | https://www.pexels.com/photo/29298710/ | sofa seat 45 cm high (seat top y=1870, floor y=2480) | oil-01, oil-03, pencil-02 |
-| B | https://www.pexels.com/photo/3705539/ | existing 40 × 50 cm frame (550 × 687 px); the 73 cm armchair confirms it | oil-02, pencil-01, pencil-03 |
-| C | https://www.pexels.com/photo/4992480/ | bench top 45 cm high (top y=1642, floor y=2041) | oil-04, oil-05, pencil-04 |
+| A | https://www.pexels.com/photo/29298710/ | sofa seat 45 cm high (seat top y=1870, floor y=2480) | oil-01, oil-03, pen-02 |
+| B | https://www.pexels.com/photo/3705539/ | existing 40 × 50 cm frame (550 × 687 px); the 73 cm armchair confirms it | oil-02, pen-01, pen-03 |
+| C | https://www.pexels.com/photo/4992480/ | bench top 45 cm high (top y=1642, floor y=2041) | oil-04, oil-05, pen-04 |
 
 ## Studio, hands and work-in-progress photos
 
@@ -37,8 +37,22 @@ Photos from Pexels under the **Pexels License** (free for commercial use; no att
 
 | File | Subject | Source |
 |---|---|---|
-| about/placeholder-hands.jpg | Hands sketching a portrait in pencil | https://www.pexels.com/photo/12453596/ |
+| about/placeholder-hands.jpg | Hands sketching faces in a sketchbook with a pen | https://www.pexels.com/photo/12575706/ |
 | process/placeholder-studio-1.jpg | An easel in a painting workshop | https://www.pexels.com/photo/6731911/ |
 | process/placeholder-studio-2.jpg | Mixing oil paint on a palette | https://www.pexels.com/photo/6184426/ |
 | process/placeholder-wip-oil.jpg | Painting at the easel (cropped to the hand and canvas) | https://www.pexels.com/photo/7885621/ |
-| process/placeholder-wip-pencil.jpg | Pencil head study in progress | https://www.pexels.com/photo/7171387/ |
+| process/placeholder-wip-pen.jpg | A pen sketch in progress in a sketchbook | https://www.pexels.com/photo/4238483/ |
+
+## Prints, cards, postcards and Print Club bundles
+
+Renderings made by the script from the CC0 artworks above, laid on a generated linen background. No third-party photos.
+
+| File | Shows |
+|---|---|
+| products/placeholder-print-oil-01.jpg | Print of Oil I (Cazin) on paper |
+| products/placeholder-print-oil-05.jpg | Print of Oil V (Monet) on paper |
+| products/placeholder-card-oil-03.jpg | Greeting card of Oil III (Claesz) with envelope |
+| products/placeholder-postcard-pen-02.jpg | Postcard of Pen II (van Gogh), front and back |
+| print-club/placeholder-bundle-01.jpg | Print Club bundle: print of oil-05, card of oil-03, postcard of pen-02 |
+| print-club/placeholder-bundle-02.jpg | Print Club bundle: print of oil-01, card of pen-01, postcard of oil-02 |
+| print-club/placeholder-bundle-03.jpg | Print Club bundle: print of oil-04, card of pen-04, postcard of oil-01 |

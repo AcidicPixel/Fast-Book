@@ -46,12 +46,12 @@
       '<h2>' + escapeHtml(item.title) + "</h2>" +
       '<p class="muted">' + escapeHtml(kind === "work" ? item.materials + ", " + item.size + ", " + item.year : item.size + " · " + item.edition) + "</p>" +
       '<p>' + money(item.price) + "</p>";
-    if (kind === "work") html += '<p><a class="pencil" href="' + item.url + '">Back to the work</a></p>';
+    if (kind === "work") html += '<p><a class="line-link" href="' + item.url + '">Back to the collections</a></p>';
     $("[data-item]").innerHTML = html;
     if (kind === "work" && status !== "Available") {
       $("[data-item]").insertAdjacentHTML("beforeend",
-        '<p class="form-error">This work is ' + escapeHtml(status.toLowerCase()) + ' and cannot be bought right now. ' +
-        '<a class="pencil" href="/contact/?subject=Purchase&work=' + encodeURIComponent(item.title) + '">Make an enquiry</a></p>');
+        '<p class="form-error">This piece is ' + escapeHtml(status.toLowerCase()) + ' and cannot be bought right now. ' +
+        '<a class="line-link" href="/commission-contact/?subject=Purchase&work=' + encodeURIComponent(item.title) + '">Make an enquiry</a></p>');
       return false;
     }
     return true;
@@ -148,7 +148,7 @@
     };
     item = (kind === "print" ? cat.prints : cat.works).find(function (x) { return x.slug === slug; });
     if (!item) {
-      $("[data-item]").innerHTML = '<p>This item was not found. <a class="pencil" href="/work/">See all the work</a></p>';
+      $("[data-item]").innerHTML = '<p>This item was not found. <a class="line-link" href="/collections/">See the collections</a></p>';
       return;
     }
     var status = statuses[slug] || item.status;

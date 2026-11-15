@@ -149,8 +149,8 @@ test("Sold, Reserved and Not-for-sale works cannot start checkout", async () => 
 
 test("two buyers clicking at the same moment: only one gets the hold", async () => {
   const [a, b] = await Promise.all([
-    post("stripe-create-session", { kind: "work", slug: "pencil-04", region: "home" }),
-    post("paypal-create-order", { kind: "work", slug: "pencil-04", region: "home" }),
+    post("stripe-create-session", { kind: "work", slug: "pen-04", region: "home" }),
+    post("paypal-create-order", { kind: "work", slug: "pen-04", region: "home" }),
   ]);
   assert.deepEqual([a.status, b.status].sort(), [200, 409]);
 });
@@ -193,17 +193,17 @@ test("hold runs out after 30 minutes and an expired session frees the work", asy
 });
 
 test("cancel: only the buyer's own hold id releases the work", async () => {
-  const j = await (await post("stripe-create-session", { kind: "work", slug: "pencil-01", region: "home" })).json();
-  assert.equal((await (await post("release", { kind: "work", slug: "pencil-01", rid: "wrong" })).json()).released, false);
-  assert.equal((await statuses())["pencil-01"], "Reserved");
-  assert.equal((await (await post("release", { kind: "work", slug: "pencil-01", rid: j.rid })).json()).released, true);
-  assert.equal((await statuses())["pencil-01"], "Available");
+  const j = await (await post("stripe-create-session", { kind: "work", slug: "pen-01", region: "home" })).json();
+  assert.equal((await (await post("release", { kind: "work", slug: "pen-01", rid: "wrong" })).json()).released, false);
+  assert.equal((await statuses())["pen-01"], "Reserved");
+  assert.equal((await (await post("release", { kind: "work", slug: "pen-01", rid: j.rid })).json()).released, true);
+  assert.equal((await statuses())["pen-01"], "Available");
   assert.ok(calls.some((c) => /\/expire$/.test(c.url)), "Stripe session was expired");
 });
 
 let ppOrder;
 test("PayPal: order total includes shipping and asks PayPal for the address", async () => {
-  const res = await post("paypal-create-order", { kind: "work", slug: "pencil-02", region: "europe" });
+  const res = await post("paypal-create-order", { kind: "work", slug: "pen-02", region: "europe" });
   assert.equal(res.status, 200);
   ppOrder = (await res.json()).id;
   const o = paypalOrders.get(ppOrder);
@@ -212,7 +212,7 @@ test("PayPal: order total includes shipping and asks PayPal for the address", as
   assert.equal(pu.amount.breakdown.item_total.value, "280.00");
   assert.equal(pu.amount.breakdown.shipping.value, "45.00");
   assert.equal(o.payment_source.paypal.experience_context.shipping_preference, "GET_FROM_FILE");
-  assert.equal((await statuses())["pencil-02"], "Reserved");
+  assert.equal((await statuses())["pen-02"], "Reserved");
 });
 
 test("PayPal: address outside the chosen region is refused before capture", async () => {
@@ -223,25 +223,25 @@ test("PayPal: address outside the chosen region is refused before capture", asyn
 
 test("PayPal: capture does not mark Sold; the verified webhook does", async () => {
   assert.equal((await post("paypal-capture-order", { orderID: ppOrder })).status, 200);
-  assert.equal((await statuses())["pencil-02"], "Reserved", "return page alone is not trusted");
+  assert.equal((await statuses())["pen-02"], "Reserved", "return page alone is not trusted");
   const event = {
     event_type: "PAYMENT.CAPTURE.COMPLETED",
     resource: { id: "CAP123", status: "COMPLETED", custom_id: paypalOrders.get(ppOrder).purchase_units[0].custom_id,
       amount: { value: "325.00", currency_code: "GBP" }, supplementary_data: { related_ids: { order_id: ppOrder } } },
   };
   assert.equal((await post("paypal-webhook", event, { "paypal-transmission-sig": "forged" })).status, 400);
-  assert.equal((await statuses())["pencil-02"], "Reserved");
+  assert.equal((await statuses())["pen-02"], "Reserved");
   const before = emails.length;
   assert.equal((await post("paypal-webhook", event, { "paypal-transmission-sig": "good" })).status, 200);
-  assert.equal((await statuses())["pencil-02"], "Sold");
+  assert.equal((await statuses())["pen-02"], "Sold");
   assert.equal(emails.length, before + 2);
   assert.ok(emails.at(-2).text.includes("Paris") || emails.at(-1).text.includes("Paris"));
 });
 
 test("PayPal: capture after the hold has run out is refused (no money taken)", async () => {
-  const id = (await (await post("paypal-create-order", { kind: "work", slug: "pencil-04", region: "home" })).json()).id
+  const id = (await (await post("paypal-create-order", { kind: "work", slug: "pen-04", region: "home" })).json()).id
     ?? null;
-  // pencil-04 may still be held by the race test; use a fresh work instead if so.
+  // pen-04 may still be held by the race test; use a fresh work instead if so.
   const orderId = id || (await (await post("paypal-create-order", { kind: "work", slug: "oil-02", region: "home" })).json()).id;
   offset = 32 * 60 * 1000;
   paypalShipCountry = "GB";
@@ -252,10 +252,10 @@ test("PayPal: capture after the hold has run out is refused (no money taken)", a
 
 test("live keys are refused unless the artist switches them on", async () => {
   process.env.STRIPE_SECRET_KEY = "sk_live_dummy";
-  const res = await post("stripe-create-session", { kind: "work", slug: "pencil-01", region: "home" });
+  const res = await post("stripe-create-session", { kind: "work", slug: "pen-01", region: "home" });
   assert.equal(res.status, 503);
   process.env.PAYPAL_ENV = "live";
-  assert.equal((await post("paypal-create-order", { kind: "work", slug: "pencil-01", region: "home" })).status, 503);
+  assert.equal((await post("paypal-create-order", { kind: "work", slug: "pen-01", region: "home" })).status, 503);
   process.env.STRIPE_SECRET_KEY = "sk_test_dummy";
   process.env.PAYPAL_ENV = "sandbox";
 });

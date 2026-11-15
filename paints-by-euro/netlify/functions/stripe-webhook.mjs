@@ -3,6 +3,7 @@ import { verifyStripeSignature } from "./_lib/stripe.mjs";
 import { completeSale, cancelHold } from "./_lib/sales.mjs";
 import { handler, json } from "./_lib/http.mjs";
 import { fromMinor } from "./_lib/catalog.mjs";
+import { handleStripeClub } from "./_lib/club-events.mjs";
 
 export default handler("POST", async (req) => {
   const payload = await req.text();
@@ -12,6 +13,9 @@ export default handler("POST", async (req) => {
   const event = JSON.parse(payload);
   const s = event.data?.object || {};
   const m = s.metadata || {};
+
+  // Print Club subscriptions
+  if (await handleStripeClub(event)) return json({ received: true });
 
   switch (event.type) {
     case "checkout.session.completed":

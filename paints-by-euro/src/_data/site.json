@@ -1,27 +1,119 @@
 {
   "name": "Paints by Euro",
   "artistName": "[Artist name]",
-  "tagline": "Oil and graphite, made slowly by hand.",
+  "tagline": "Oil and ink, made slowly by hand.",
   "taglineOptions": [
-    "Oil and graphite, made slowly by hand.",
-    "Paint, pencil, paper, patience.",
-    "Quiet work in oil and pencil."
+    "Oil and ink, made slowly by hand.",
+    "Paint, pen, paper, patience.",
+    "Quiet work in oil and pen."
   ],
-  "description": "Original oil paintings and pencil drawings by [Artist name]. See the work, buy originals and ask about commissions.",
+  "intro": "This is the online studio of [artist name], a painter in [home city]. Here you can browse original oil paintings and pen sketches, buy prints, cards and postcards, join the monthly Print Club, or ask about a commission.",
+  "introOptions": [
+    "This is the online studio of [artist name], a painter in [home city]. Here you can browse original oil paintings and pen sketches, buy prints, cards and postcards, join the monthly Print Club, or ask about a commission.",
+    "Welcome. Every piece here is made by hand by [artist name] in [home city]: original oil paintings and pen sketches, plus prints, cards and postcards. Browse the collections, buy direct from the artist, or commission something of your own.",
+    "Paints by Euro is the shop and portfolio of [artist name]. Find original oil paintings and pen sketches, prints, and cards and postcards for sending. New work is added [how often], and the Print Club brings a small bundle to your door each month."
+  ],
+  "statement": "I paint in oil because it lets me work slowly, building colour in layers until the light feels right. I sketch in pen because it is quick and honest: every line stays. Most of my paintings and sketches start from [subjects the artist paints] in and around [home city].",
+  "statementOptions": [
+    "I paint in oil because it lets me work slowly, building colour in layers until the light feels right. I sketch in pen because it is quick and honest: every line stays. Most of my paintings and sketches start from [subjects the artist paints] in and around [home city].",
+    "I make oil paintings and pen sketches of [subjects the artist paints]. Oil gives me time: I can scrape back, repaint and build the surface over days. Pen is the opposite: fast, direct, and impossible to erase. Working in both keeps my eye fresh.",
+    "My work moves between two speeds. Pen sketches catch a moment quickly; oil paintings take [time] and many layers to finish. Both start from looking closely at [subjects the artist paints]. Prints and cards let more people take a piece of that home."
+  ],
+  "description": "Original oil paintings and pen sketches, prints, cards and postcards by [Artist name]. Join the Print Club or ask about a commission.",
   "email": "[artist email]",
   "currency": "GBP",
   "taxRule": "[tax rule]",
   "social": [
-    { "label": "Instagram", "url": "https://instagram.com/[handle]" },
-    { "label": "Facebook", "url": "https://facebook.com/[page]" }
+    {
+      "label": "Instagram",
+      "url": "https://instagram.com/[handle]"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://facebook.com/[page]"
+    }
   ],
   "shipping": {
     "regions": [
-      { "id": "home", "label": "[Home country]", "cost": 25, "countries": ["GB"] },
-      { "id": "europe", "label": "Europe", "cost": 45, "countries": ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE","NO","CH","IS","LI"] },
-      { "id": "world", "label": "Rest of the world", "cost": 80, "countries": ["*"] }
+      {
+        "id": "home",
+        "label": "[Home country]",
+        "cost": 25,
+        "countries": [
+          "GB"
+        ]
+      },
+      {
+        "id": "europe",
+        "label": "Europe",
+        "cost": 45,
+        "countries": [
+          "AT",
+          "BE",
+          "BG",
+          "HR",
+          "CY",
+          "CZ",
+          "DK",
+          "EE",
+          "FI",
+          "FR",
+          "DE",
+          "GR",
+          "HU",
+          "IE",
+          "IT",
+          "LV",
+          "LT",
+          "LU",
+          "MT",
+          "NL",
+          "PL",
+          "PT",
+          "RO",
+          "SK",
+          "SI",
+          "ES",
+          "SE",
+          "NO",
+          "CH",
+          "IS",
+          "LI"
+        ]
+      },
+      {
+        "id": "world",
+        "label": "Rest of the world",
+        "cost": 80,
+        "countries": [
+          "*"
+        ]
+      }
     ]
   },
-  "prints": { "enabled": false },
-  "analytics": { "cloudflareToken": "" }
+  "prints": {
+    "enabled": true
+  },
+  "printClub": {
+    "price": "[monthly price]",
+    "separatePrice": "[price of the 3 items bought one at a time]",
+    "saving": "[saving]",
+    "printSize": "[print size]",
+    "shippingCost": "[shipping cost]",
+    "shippingCountriesText": "[shipping countries]",
+    "countries": [
+      "GB"
+    ],
+    "billingDateText": "[billing date]",
+    "billingDay": 1,
+    "gifts": {
+      "enabled": false,
+      "threeMonthPrice": "[3-month gift price]",
+      "twelveMonthPrice": "[12-month gift price]"
+    }
+  },
+  "events": [],
+  "analytics": {
+    "cloudflareToken": ""
+  }
 }

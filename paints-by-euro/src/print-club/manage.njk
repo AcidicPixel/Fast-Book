@@ -1,0 +1,29 @@
+---
+layout: layouts/base.njk
+pageTitle: "Manage my Print Club"
+description: "Change your address, skip a month or cancel your Print Club membership."
+noindex: true
+permalink: /print-club/manage/
+scripts: ["club-manage"]
+---
+<section class="club-manage" data-manage>
+  <h1 class="page-title">Manage my Print Club</h1>
+
+  <div data-step="ask">
+    <p class="lede">Enter the email address you joined with. We’ll email you a link that lets you change your address, skip a month or cancel. The link works for one hour.</p>
+    <form class="contact-form" data-ask-form>
+      <div class="field">
+        <label for="m-email">Email</label>
+        <input id="m-email" name="email" type="email" required autocomplete="email">
+      </div>
+      <button class="btn btn-solid" type="submit">Email me a link</button>
+      <p class="fine" data-ask-msg role="status"></p>
+    </form>
+  </div>
+
+  <div data-step="member" hidden>
+    <p class="lede" data-member-intro></p>
+    <div data-member-list></div>
+    <p class="form-error" role="alert" data-member-error hidden></p>
+  </div>
+</section>

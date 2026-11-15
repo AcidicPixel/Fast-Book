@@ -1,0 +1,28 @@
+---
+layout: layouts/base.njk
+pageTitle: "Print Club members"
+description: "Members and shipping addresses for this month."
+noindex: true
+permalink: /print-club/admin/
+scripts: ["club-admin"]
+---
+<section class="club-admin" data-admin>
+  <h1 class="page-title">Print Club members</h1>
+  <form class="admin-login" data-admin-form>
+    <div class="field">
+      <label for="a-pass">Admin password</label>
+      <input id="a-pass" type="password" required autocomplete="current-password">
+    </div>
+    <div class="field">
+      <label for="a-month">Month</label>
+      <input id="a-month" type="month" required>
+    </div>
+    <button class="btn btn-solid" type="submit">Show members</button>
+  </form>
+  <p class="form-error" role="alert" data-admin-error hidden></p>
+  <div data-admin-result hidden>
+    <p class="lede" data-admin-summary></p>
+    <p><button type="button" class="btn btn-line" data-admin-csv>Download CSV</button></p>
+    <div class="table-wrap"><table data-admin-table></table></div>
+  </div>
+</section>

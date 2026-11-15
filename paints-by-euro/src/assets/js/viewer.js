@@ -330,10 +330,15 @@
         c.hidden = !((medium === "all" || c.dataset.medium === medium) && (avail === "all" || c.dataset.status === "available"));
       });
       var n = visible().length;
-      countEl.textContent = n + (n === 1 ? " work" : " works");
+      countEl.textContent = n + (n === 1 ? " piece" : " pieces");
       emptyEl.hidden = n > 0;
       document.dispatchEvent(new CustomEvent("layoutchange"));
     };
+    // Links such as /collections/?medium=pen open with that filter selected.
+    var wanted = new URLSearchParams(location.search).get("medium");
+    if (wanted && filters.querySelector('input[name=medium][value="' + wanted.replace(/[^a-z]/g, "") + '"]')) {
+      filters.querySelector('input[name=medium][value="' + wanted.replace(/[^a-z]/g, "") + '"]').checked = true;
+    }
     filters.addEventListener("change", applyFilters);
     document.addEventListener("statuschange", applyFilters);
     applyFilters();

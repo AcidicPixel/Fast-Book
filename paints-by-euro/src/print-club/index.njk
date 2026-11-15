@@ -1,0 +1,84 @@
+---
+layout: layouts/base.njk
+pageTitle: "Print Club"
+description: "A monthly bundle of art by post: one print, one card and one postcard from Paints by Euro. Skip a month or cancel any time."
+bodyClass: page-club
+scripts: ["print-club"]
+---
+{%- set pc = site.printClub %}
+<header class="page-head club-head">
+  <h1 class="page-title">Print Club</h1>
+  <p class="lede">A small bundle of new art by post every month. Skip a month or cancel whenever you like.</p>
+</header>
+
+<section class="club-intro">
+  <figure class="club-photo">
+    {% picture "/images/print-club/placeholder-bundle-01.jpg", "Placeholder: a Print Club bundle with a print, a card and a postcard", "large", "(min-width: 64em) 55vw, 100vw", "", true %}
+  </figure>
+  <div class="club-box">
+    <h2 class="section-title">Each monthly bundle</h2>
+    <ul class="bundle-list">
+      <li><strong>1 print</strong>, {{ pc.printSize }}</li>
+      <li><strong>1 card</strong>, with envelope</li>
+      <li><strong>1 postcard</strong></li>
+    </ul>
+    <dl class="totals club-price">
+      <div><dt>Bought one at a time</dt><dd>{{ pc.separatePrice }}</dd></div>
+      <div class="total"><dt>Print Club, per month</dt><dd>{{ pc.price }}</dd></div>
+      <div><dt>You save</dt><dd>{{ pc.saving }} a month</dd></div>
+      <div><dt>Shipping</dt><dd>{{ pc.shippingCost }}</dd></div>
+    </dl>
+    <p class="fine">Ships to {{ pc.shippingCountriesText }}. Everyone is charged on the {{ pc.billingDateText }} of each month.</p>
+  </div>
+</section>
+
+<section class="club-join" id="join" aria-labelledby="join-title" data-club>
+  <h2 id="join-title" class="section-title">Join</h2>
+  <p class="test-flag" data-test-flag hidden>Test mode. No real money is taken.</p>
+  <fieldset class="club-plans">
+    <legend class="visually-hidden">Choose a plan</legend>
+    <label class="region-option"><input type="radio" name="plan" value="monthly" checked> <span>Monthly, cancel any time</span><span>{{ pc.price }} a month</span></label>
+    {%- if pc.gifts.enabled %}
+    <label class="region-option"><input type="radio" name="plan" value="gift3"> <span>Gift: 3 months</span><span>{{ pc.gifts.threeMonthPrice }}</span></label>
+    <label class="region-option"><input type="radio" name="plan" value="gift12"> <span>Gift: 12 months</span><span>{{ pc.gifts.twelveMonthPrice }}</span></label>
+    {%- endif %}
+  </fieldset>
+  <div class="pay-options">
+    <div class="pay-option">
+      <p class="pay-label">Card, Apple Pay or Google Pay</p>
+      <button type="button" class="pay-btn" data-club-stripe>Join with card <span class="pay-via">via Stripe</span></button>
+    </div>
+    <div class="pay-option">
+      <p class="pay-label">PayPal account</p>
+      <div class="pay-btn-slot" data-club-paypal><span class="pay-btn pay-disabled">PayPal is loading…</span></div>
+    </div>
+  </div>
+  <p class="fine">You pay on Stripe’s or PayPal’s own secure page, which also asks for your delivery address. This site never sees your card details.</p>
+  <p class="form-error" role="alert" data-club-error hidden></p>
+</section>
+
+<section class="club-past" aria-labelledby="past-title">
+  <h2 id="past-title" class="section-title">Past bundles</h2>
+  <ul class="past-grid" role="list">
+    {%- for n in ["01", "02", "03"] %}
+    <li data-reveal-scope>
+      <figure data-reveal>{% picture "/images/print-club/placeholder-bundle-" + n + ".jpg", "Placeholder: past Print Club bundle " + loop.index, "thumb", "(min-width: 64em) 30vw, 92vw" %}</figure>
+      <p class="card-meta" data-reveal-line>[Month and year]</p>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+
+<section class="club-faq prose" aria-labelledby="faq-title">
+  <h2 id="faq-title">Questions</h2>
+  <h3>When do I pay?</h3>
+  <p>On the {{ pc.billingDateText }} of each month. If you join part-way through a month, your first payment is taken on the next {{ pc.billingDateText }}.</p>
+  <h3>When does my bundle ship?</h3>
+  <p>Bundles are posted within [number] working days of the {{ pc.billingDateText }}. Delivery to {{ pc.shippingCountriesText }} usually takes [delivery time].</p>
+  <h3>Can I skip a month?</h3>
+  <p>Yes. Go to <a href="/print-club/manage/">Manage my Print Club</a> before the {{ pc.billingDateText }} and choose “Skip next month”. You are not charged that month and no bundle is sent.</p>
+  <h3>How do I cancel?</h3>
+  <p>Any time, from <a href="/print-club/manage/">Manage my Print Club</a>. Card members cancel in the Stripe customer portal; PayPal members cancel in their PayPal settings. You keep any bundle already paid for.</p>
+  <h3>Can I change my address?</h3>
+  <p>Yes, from <a href="/print-club/manage/">Manage my Print Club</a>. Changes made before the {{ pc.billingDateText }} apply to that month’s bundle.</p>
+</section>

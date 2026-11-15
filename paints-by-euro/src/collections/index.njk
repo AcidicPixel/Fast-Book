@@ -1,0 +1,62 @@
+---
+layout: layouts/base.njk
+pageTitle: "Collections"
+description: "Oil paintings, pen sketches, prints, cards and postcards by [Artist name]. Filter by medium or show only what you can buy."
+bodyClass: page-gallery
+scripts: ["viewer"]
+---
+{#- One list: original works first, then prints, then cards and postcards. #}
+{%- set entries = [] %}
+{%- for w in collections.works %}
+  {%- set _x = entries.push({ url: w.url, slug: w.fileSlug, kind: w.data.medium, title: w.data.title, data: w.data, status: w.data.status, meta: (w.data.medium | mediumLabel) + ", " + w.data.year, image: w.data.image }) %}
+{%- endfor %}
+{%- for p in collections.printsOnly %}
+  {%- set _x = entries.push({ url: "/prints/#" + p.fileSlug, slug: p.fileSlug, kind: "print", title: p.data.title, data: p.data, status: "Available", meta: "Print · " + (p.data.price | money(site.currency)), image: p.data.image }) %}
+{%- endfor %}
+{%- for p in collections.cards %}
+  {%- set _x = entries.push({ url: "/prints/#" + p.fileSlug, slug: p.fileSlug, kind: "card", title: p.data.title, data: p.data, status: "Available", meta: p.data.edition + " · " + (p.data.price | money(site.currency)), image: p.data.image }) %}
+{%- endfor %}
+
+<header class="page-head">
+  <h1 class="page-title" data-reveal-text>Collections</h1>
+  <p class="lede" data-reveal-text>Oil paintings and pen sketches, plus prints, cards and postcards. Select a piece to see it full screen and zoom in.</p>
+</header>
+
+<form class="filters" aria-label="Filter the collections" data-filters>
+  <fieldset>
+    <legend>Medium</legend>
+    <label><input type="radio" name="medium" value="all" checked> <span>All</span></label>
+    {%- for m in mediums %}
+    <label><input type="radio" name="medium" value="{{ m.key }}"> <span>{{ m.name }}</span></label>
+    {%- endfor %}
+  </fieldset>
+  <fieldset>
+    <legend>Show</legend>
+    <label><input type="radio" name="avail" value="all" checked> <span>All</span></label>
+    <label><input type="radio" name="avail" value="available"> <span>Available</span></label>
+  </fieldset>
+  <p class="filter-count" aria-live="polite" data-filter-count>{{ entries.length }} pieces</p>
+</form>
+
+<ul class="gallery" role="list" data-gallery>
+  {%- for e in entries %}
+  <li class="gallery-item" data-work="{{ e.slug }}" data-medium="{{ e.kind }}" data-status="{{ e.status | statusKey }}" data-index="{{ loop.index0 }}" data-reveal-scope>
+    <a href="{{ e.url }}" class="card-link" data-open-work="{{ loop.index0 }}">
+      <span class="card-frame" data-reveal>{% picture e.image, e.data | altText, "thumb", "(min-width: 64em) 30vw, (min-width: 40em) 45vw, 92vw" %}</span>
+      <span class="card-caption">
+        <span class="card-title" data-reveal-line>{{ e.title }}</span>
+        <span class="card-meta" data-reveal-line>{{ e.meta }}</span>
+        <span class="status" data-status-label data-reveal-line>{{ e.status }}</span>
+      </span>
+    </a>
+  </li>
+  {%- endfor %}
+</ul>
+<p class="empty" data-empty hidden>Nothing matches these filters right now. <a class="line-link" href="/commission-contact/?subject=Commission">Ask about a commission</a>.</p>
+
+<script type="application/json" id="viewer-items">[
+{%- for e in entries %}
+{{ { src: e.image | imgUrl(2048), alt: e.data | altText, title: e.title, meta: e.meta, href: e.url, slug: e.slug } | json | safe }}{% if not loop.last %},{% endif %}
+{%- endfor %}
+]</script>
+{% include "partials/viewer.njk" %}

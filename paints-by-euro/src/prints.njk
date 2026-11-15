@@ -1,25 +1,31 @@
 ---
 layout: layouts/base.njk
 pageTitle: "Prints"
-description: "Prints of oil paintings and pencil drawings by [Artist name]."
+description: "Prints, cards and postcards of oil paintings and pen sketches by [Artist name]."
 bodyClass: page-gallery
 ---
 <header class="page-head">
-  <h1 class="page-title">Prints</h1>
-  <p class="lede">[Short text about the prints: paper, printing method, signing.]</p>
+  <h1 class="page-title" data-reveal-text>Prints</h1>
+  <p class="lede" data-reveal-text>[Short text about the prints: paper, printing method, signing.] Prints, cards and postcards also come in the monthly <a class="line-link" href="/print-club/">Print Club</a> bundle.</p>
 </header>
-<ul class="gallery" role="list">
-  {%- for p in collections.prints %}
-  <li class="gallery-item">
-    <div class="card-link">
-      <span class="card-frame">{% picture p.data.image, p.data.title + ", print", "thumb", "(min-width: 64em) 30vw, 92vw" %}</span>
-      <span class="card-caption">
-        <span class="card-title">{{ p.data.title }}</span>
-        <span class="card-meta">{{ p.data.size }} · {{ p.data.edition }}</span>
-        <span class="card-meta">{{ p.data.price | money(site.currency) }}</span>
-      </span>
-    </div>
-    <a class="btn btn-solid btn-small" href="/checkout/?print={{ p.fileSlug }}">Buy print</a>
-  </li>
-  {%- endfor %}
-</ul>
+
+{%- for group in [{ title: "Prints", items: collections.printsOnly, buy: "Buy print" }, { title: "Cards & Postcards", items: collections.cards, buy: "Buy" }] %}
+<section class="product-section" aria-labelledby="ps-{{ loop.index }}">
+  <h2 id="ps-{{ loop.index }}" class="section-title" data-reveal-text>{{ group.title }}</h2>
+  <ul class="gallery" role="list">
+    {%- for p in group.items %}
+    <li class="gallery-item product" id="{{ p.fileSlug }}" data-reveal-scope>
+      <div class="card-link">
+        <span class="card-frame" data-reveal>{% picture p.data.image, p.data | altText, "thumb", "(min-width: 64em) 30vw, 92vw" %}</span>
+        <span class="card-caption">
+          <span class="card-title" data-reveal-line>{{ p.data.title }}</span>
+          <span class="card-meta" data-reveal-line>{{ p.data.size }} · {{ p.data.edition }}</span>
+          <span class="card-meta" data-reveal-line>{{ p.data.price | money(site.currency) }}</span>
+        </span>
+      </div>
+      <a class="btn btn-solid btn-small" href="/checkout/?print={{ p.fileSlug }}">{{ group.buy }}</a>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+{%- endfor %}

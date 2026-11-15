@@ -28,14 +28,14 @@ export const WORKS = [
     credit: "Jules Breton, The Song of the Lark, 1884, oil on canvas" },
   { slug: "oil-05", kind: "oil", aic: 16568, img: "3c27b499-af56-f0d5-93b5-a7f2f1ad5813", px: 3000, h: 89, w: 94, depth: 3, room: "C", focus: [0.42, 0.62],
     credit: "Claude Monet, Water Lilies, 1906, oil on canvas" },
-  { slug: "pencil-01", kind: "pencil", aic: 72529, img: "2928e87a-9fd7-46c6-0c10-0c26fedf12ed", px: 1671, h: 31, w: 23, room: "B", focus: [0.45, 0.27],
-    credit: "Théodore Chassériau, Portrait of the Baroness Chassériau, 1846, graphite on cream wove paper" },
-  { slug: "pencil-02", kind: "pencil", aic: 113705, img: "56ad1d83-5469-e161-ec6d-4e923facdd2f", px: 3000, h: 24, w: 31, room: "A", focus: [0.5, 0.5],
-    credit: "Paul Cézanne, L'Estaque, 1870/72, graphite on ivory wove paper" },
-  { slug: "pencil-03", kind: "pencil", aic: 78908, img: "5cac221e-c579-3563-fc76-3a2f155e49a1", px: 2118, h: 25, w: 17, room: "B", focus: [0.45, 0.22],
-    credit: "Sir Edward Burne-Jones, Study for Figure of 'Idleness', c. 1873–77, graphite on ivory wove paper" },
-  { slug: "pencil-04", kind: "pencil", aic: 156302, img: "12a5030c-44ab-11cb-f046-9c3bb12678a9", px: 2896, h: 20, w: 13, room: "C", focus: [0.5, 0.45],
-    credit: "William Michael Harnett, Still Life Sketch, n.d., graphite and pen and brown ink on cream laid paper" },
+  { slug: "pen-01", kind: "pen", aic: 145830, img: "12d457aa-db47-b15e-5550-c6c1a9708a2f", px: 2658, h: 23, w: 25, room: "B", focus: [0.62, 0.42],
+    credit: "Baccio Bandinelli, Two Studies of the Head of a Youth, c. 1550, pen and brown ink on tan paper" },
+  { slug: "pen-02", kind: "pen", aic: 133605, img: "1d789b2f-7821-b5a8-5f84-6fb2549b4e30", px: 3000, h: 25, w: 33, room: "A", focus: [0.5, 0.35],
+    credit: "Vincent van Gogh, Landscape at Arles, 1888, pen and brown ink over graphite on cream wove paper" },
+  { slug: "pen-03", kind: "pen", aic: 13572, img: "e1722e55-ab1e-1c31-05c7-7e30bd681d00", px: 1482, h: 28, w: 19, room: "B", focus: [0.5, 0.25],
+    credit: "Constantin Guys, Three-Quarter Length Portrait of a Woman, 1865/70, pen and brown ink with brush and grey wash" },
+  { slug: "pen-04", kind: "pen", aic: 136977, img: "514411b3-2930-9245-f9cf-ec8b6c42fb6c", px: 3000, h: 30, w: 36, room: "C", focus: [0.45, 0.3],
+    credit: "Jean-François Millet, Landscape – Hillside in Gruchy, Normandy, 1869/70, pen and brown ink on cream laid paper" },
 ];
 
 // Rooms are photographed straight on, so the wall is parallel to the picture plane.
@@ -54,11 +54,11 @@ const ROOMS = {
 };
 
 const PHOTOS = [
-  { out: "about/placeholder-hands.jpg", pexels: 12453596, desc: "Hands sketching a portrait in pencil" },
+  { out: "about/placeholder-hands.jpg", pexels: 12575706, desc: "Hands sketching faces in a sketchbook with a pen" },
   { out: "process/placeholder-studio-1.jpg", pexels: 6731911, desc: "An easel in a painting workshop" },
   { out: "process/placeholder-studio-2.jpg", pexels: 6184426, desc: "Mixing oil paint on a palette" },
   { out: "process/placeholder-wip-oil.jpg", pexels: 7885621, desc: "Painting at the easel (cropped to the hand and canvas)", crop: [0, 0.05, 0.5, 0.95] },
-  { out: "process/placeholder-wip-pencil.jpg", pexels: 7171387, desc: "Pencil head study in progress" },
+  { out: "process/placeholder-wip-pen.jpg", pexels: 4238483, desc: "A pen sketch in progress in a sketchbook" },
 ];
 
 /* ---------------------------------------------------------------- helpers */
@@ -337,6 +337,110 @@ for (const p of PHOTOS) {
   console.log("made", p.out);
 }
 
+/* ---------------------------------------------------------------- products */
+// Product photos (prints, cards, postcards, Print Club bundles) are flat-lay
+// renderings made from the placeholder artworks above, on a linen-coloured ground.
+const art = async (slug) => fetchCached(AIC(WORKS.find((w) => w.slug === slug).img, WORKS.find((w) => w.slug === slug).px), `aic-${WORKS.find((w) => w.slug === slug).aic}.jpg`);
+
+async function linen(W, H) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.05" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 0.45 0 0 0 0 0.40 0 0 0 0 0.33 0 0 0 0.10 0"/></filter>
+    <filter id="m"><feTurbulence type="fractalNoise" baseFrequency="0.05 0.9" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 0.45 0 0 0 0 0.40 0 0 0 0 0.33 0 0 0 0.08 0"/></filter>
+    <filter id="t"><feTurbulence type="fractalNoise" baseFrequency="0.004" numOctaves="2" seed="2"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 0.97 0 0 0 0 0.92 0 0 0 0.18 0"/></filter>
+    <rect width="${W}" height="${H}" fill="#e6ddcf"/><rect width="${W}" height="${H}" filter="url(#t)"/>
+    <rect width="${W}" height="${H}" filter="url(#n)"/><rect width="${W}" height="${H}" filter="url(#m)"/>
+    <defs><radialGradient id="v" cx="0.35" cy="0.3" r="0.9"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.12"/></radialGradient></defs>
+    <rect width="${W}" height="${H}" fill="url(#v)"/></svg>`;
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
+/** A sheet of paper with the artwork printed on it (border = white margin as a fraction of width). */
+async function sheet(src, w, { border = 0.08, paper = "#f7f3ea", back = null } = {}) {
+  if (back) {
+    const h = back;
+    // reverse of a postcard: dividing line, address lines and a stamp box
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="${paper}"/>
+      <line x1="${w / 2}" y1="${h * 0.12}" x2="${w / 2}" y2="${h * 0.88}" stroke="#b9b0a2" stroke-width="2"/>
+      ${[0.5, 0.62, 0.74, 0.86].map((y) => `<line x1="${w * 0.56}" y1="${h * y}" x2="${w * 0.92}" y2="${h * y}" stroke="#c9c0b2" stroke-width="2"/>`).join("")}
+      <rect x="${w * 0.78}" y="${h * 0.1}" width="${w * 0.14}" height="${h * 0.22}" fill="none" stroke="#b9b0a2" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="${w * 0.08}" y="${h * 0.86}" font-family="DejaVu Serif, serif" font-size="${w * 0.03}" fill="#8f877a">Paints by Euro</text></svg>`;
+    return { buf: await sharp(Buffer.from(svg)).png().toBuffer(), w, h };
+  }
+  const meta = await sharp(src).metadata();
+  const b = Math.round(w * border);
+  const aw = w - 2 * b, ah = Math.round(aw * (meta.height / meta.width));
+  const h = ah + 2 * b;
+  const img = await sharp(src).resize(aw, ah).toBuffer();
+  const buf = await sharp({ create: { width: w, height: h, channels: 4, background: paper } })
+    .composite([{ input: img, left: b, top: b }]).png().toBuffer();
+  return { buf, w, h };
+}
+
+/** Kraft envelope for cards. */
+async function envelope(w, h) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="#c8a57a"/>
+    <path d="M0 0 L${w / 2} ${h * 0.55} L${w} 0" fill="none" stroke="#a9875e" stroke-width="3"/>
+    <filter id="g"><feTurbulence baseFrequency="0.8" numOctaves="2"/><feColorMatrix values="0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 0.12 0"/></filter>
+    <rect width="${w}" height="${h}" filter="url(#g)"/></svg>`;
+  return { buf: await sharp(Buffer.from(svg)).png().toBuffer(), w, h };
+}
+
+/** Lay sheets on linen with soft shadows. items: { piece, x, y, rot } (x, y = centre). */
+async function flatlay(W, H, items, outRel) {
+  const layers = [];
+  for (const it of items) {
+    const rotated = await sharp(it.piece.buf).ensureAlpha().rotate(it.rot || 0, { background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+    const m = await sharp(rotated).metadata();
+    const alpha = await sharp(rotated).extractChannel(3).toBuffer();
+    const shadow = await sharp({ create: { width: m.width, height: m.height, channels: 3, background: "#2a2118" } })
+      .joinChannel(await sharp(alpha).linear(0.38, 0).toBuffer()).png().toBuffer();
+    const pad = 40;
+    const shadowBlur = await sharp(shadow).extend({ top: pad, bottom: pad, left: pad, right: pad, background: { r: 0, g: 0, b: 0, alpha: 0 } }).blur(9).png().toBuffer();
+    const left = Math.round(it.x - m.width / 2), top = Math.round(it.y - m.height / 2);
+    layers.push({ input: shadowBlur, left: left - pad + 8, top: top - pad + 12 });
+    layers.push({ input: rotated, left, top });
+  }
+  const img = await sharp(await linen(W, H)).composite(layers).png().toBuffer();
+  await save(img, outRel, 84);
+}
+
+const PRODUCTS = [];
+async function product(out, desc, build) { await build(); PRODUCTS.push({ out, desc }); console.log("made", out); }
+
+await product("products/placeholder-print-oil-01.jpg", "Print of Oil I (Cazin) on paper", async () =>
+  flatlay(1800, 1350, [{ piece: await sheet(await art("oil-01"), 1100, { border: 0.09 }), x: 900, y: 690, rot: -2 }], "products/placeholder-print-oil-01.jpg"));
+await product("products/placeholder-print-oil-05.jpg", "Print of Oil V (Monet) on paper", async () =>
+  flatlay(1800, 1350, [{ piece: await sheet(await art("oil-05"), 900, { border: 0.1 }), x: 900, y: 680, rot: 1.5 }], "products/placeholder-print-oil-05.jpg"));
+await product("products/placeholder-card-oil-03.jpg", "Greeting card of Oil III (Claesz) with envelope", async () =>
+  flatlay(1800, 1350, [
+    { piece: await envelope(980, 700), x: 1050, y: 740, rot: 4 },
+    { piece: await sheet(await art("oil-03"), 880, { border: 0.07 }), x: 820, y: 640, rot: -3 },
+  ], "products/placeholder-card-oil-03.jpg"));
+await product("products/placeholder-postcard-pen-02.jpg", "Postcard of Pen II (van Gogh), front and back", async () => {
+  const front = await sheet(await art("pen-02"), 820, { border: 0.04 });
+  await flatlay(1800, 1350, [
+    { piece: await sheet(null, 820, { back: front.h }), x: 1120, y: 760, rot: 6 },
+    { piece: front, x: 760, y: 600, rot: -4 },
+  ], "products/placeholder-postcard-pen-02.jpg");
+});
+
+// Print Club bundles: 1 print + 1 card + 1 postcard
+const BUNDLES = [
+  { n: "01", print: "oil-05", card: "oil-03", post: "pen-02" },
+  { n: "02", print: "oil-01", card: "pen-01", post: "oil-02" },
+  { n: "03", print: "oil-04", card: "pen-04", post: "oil-01" },
+];
+for (const bd of BUNDLES) {
+  const out = `print-club/placeholder-bundle-${bd.n}.jpg`;
+  await product(out, `Print Club bundle: print of ${bd.print}, card of ${bd.card}, postcard of ${bd.post}`, async () =>
+    flatlay(1800, 1350, [
+      { piece: await sheet(await art(bd.print), 760, { border: 0.09 }), x: 560, y: 660, rot: -3 },
+      { piece: await envelope(520, 380), x: 1330, y: 980, rot: 5 },
+      { piece: await sheet(await art(bd.card), 470, { border: 0.07 }), x: 1260, y: 470, rot: 4 },
+      { piece: await sheet(await art(bd.post), 500, { border: 0.04 }), x: 1300, y: 900, rot: -6 },
+    ], out));
+}
+
 /* ---------------------------------------------------------------- credits */
 const lines = [
   "# Placeholder images: sources and licences",
@@ -369,6 +473,14 @@ const lines = [
   "| File | Subject | Source |",
   "|---|---|---|",
   ...PHOTOS.map((p) => `| ${p.out} | ${p.desc} | https://www.pexels.com/photo/${p.pexels}/ |`),
+  "",
+  "## Prints, cards, postcards and Print Club bundles",
+  "",
+  "Renderings made by the script from the CC0 artworks above, laid on a generated linen background. No third-party photos.",
+  "",
+  "| File | Shows |",
+  "|---|---|",
+  ...PRODUCTS.map((p) => `| ${p.out} | ${p.desc} |`),
   "",
 ];
 await writeFile(path.join(OUT, "PLACEHOLDER-SOURCES.md"), lines.join("\n"));

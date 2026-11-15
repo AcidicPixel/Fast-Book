@@ -23,13 +23,14 @@ export default class {
     }));
     const prints = site.prints.enabled
       ? collections.prints.map((p) => ({
-          slug: p.fileSlug, title: p.data.title, size: p.data.size, edition: p.data.edition,
-          price: Number(p.data.price), thumb: imgUrl(p.data.image, 480), url: "/prints/",
+          slug: p.fileSlug, type: p.data.type || "print", title: p.data.title, size: p.data.size, edition: p.data.edition,
+          price: Number(p.data.price), thumb: imgUrl(p.data.image, 480), url: `/prints/#${p.fileSlug}`,
         }))
       : [];
     return JSON.stringify({
       siteName: site.name, currency: site.currency, taxRule: site.taxRule,
       shipping: site.shipping, works, prints,
+      printClub: { countries: site.printClub.countries, billingDay: site.printClub.billingDay, giftsEnabled: site.printClub.gifts.enabled },
     }, null, 2);
   }
 }
