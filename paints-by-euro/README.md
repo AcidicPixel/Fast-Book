@@ -1,7 +1,7 @@
 # Paints by Euro
 
 Portfolio and shop for an artist who works in oil paint and pen, with prints, cards, postcards and a monthly Print Club.
-Static site (Eleventy) on Cloudflare Pages, with Pages Functions for Stripe and PayPal, and Cloudflare D1 for live data.
+Static site (Eleventy) served by one Cloudflare Worker (static assets + `/api/*` code), with Cloudflare D1 for live data.
 
 The artist's setup guide, the list of placeholders to replace and the steps to go live are in **[SETUP-FOR-ARTIST.md](SETUP-FOR-ARTIST.md)**.
 
@@ -32,7 +32,7 @@ Old addresses (301 via _redirects, plus fallback pages): /work → /collections,
 /api/club/manage-link            POST  email a one-hour sign-in link
 /api/club/me | portal | skip | address   member self-service
 /api/club/members                GET   artist list (JSON / CSV), Authorization: Bearer CLUB_ADMIN_PASSWORD
-club-resume                      daily scheduled: resumes PayPal members after a skipped month
+club-resume                      daily (Worker cron): resumes PayPal members after a skipped month
 /api/stripe/webhook, /api/paypal/webhook also handle subscription events
 (plus the original-artwork checkout endpoints: /api/status, /api/config, /api/stripe/*, /api/paypal/*, /api/release)
 ```
@@ -87,13 +87,13 @@ The artist sets status in the content file. Checkout adds a live layer in Cloudf
 - Repeated webhooks don't repeat emails. A second payment for an already-sold work emails the artist to refund it.
 - If a sold work comes back (e.g. refunded), add 1 to its **Relist counter** in the CMS.
 
-## Hosting (Cloudflare Pages)
+## Hosting (Cloudflare Workers)
 
-- `functions/api/[[route]].js` is the only Pages Function. It routes each `/api/...` request to the handler in `server/` that declares that path, copies Cloudflare variables into `process.env`, and connects the D1 binding `DB`.
-- Needs the compatibility flag `nodejs_compat` (for `node:crypto` and `Buffer`).
-- `src/_redirects` (old /work and /contact addresses) and `src/_headers` (security and cache headers) are copied to `_site`.
+- `wrangler.jsonc` sets up the Worker: static assets from `_site`, the Worker runs only for `/api/*`, the D1 binding `DB` (created on first deploy), the `nodejs_compat` flag and a daily cron.
+- `worker.js` sends `/api/*` to `functions/api/[[route]].js`, which routes to the handler in `server/` that declares that path. The router copies variables into `process.env` and connects D1. The `scheduled` handler runs the PayPal resume job.
+- `src/_redirects` (old /work and /contact addresses) and `src/_headers` (security and cache headers) are applied to the static assets. `404.html` is the not-found page.
 - Forms post to `/api/contact` and `/api/newsletter` and work without JavaScript. They redirect to `/thanks/`.
-- Scheduled work: `cron-worker/worker.js` is a separate free Worker with a daily Cron Trigger. It calls `POST /api/club/resume` with `x-cron-secret`.
+- Workers Builds settings: build `npm run build`, deploy `npx wrangler deploy`, root `paints-by-euro`.
 
 ## Develop
 
@@ -102,8 +102,8 @@ cd paints-by-euro
 npm install
 npm start          # http://localhost:8080 (pages only)
 npm test           # builds, then runs all payment, Print Club and form tests with mock Stripe/PayPal
-npm run build && npx wrangler pages dev _site --compatibility-flags=nodejs_compat --d1 DB=local
-                   # pages + functions + local D1, as on Cloudflare (keys as --binding NAME=value)
+npm run build && npx wrangler dev
+                   # the real Worker locally with a local D1 (keys as --var NAME:value)
 ```
 
 Environment variables are listed in SETUP-FOR-ARTIST.md. Live keys are refused unless `ALLOW_LIVE_PAYMENTS=true`.

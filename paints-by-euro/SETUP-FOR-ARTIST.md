@@ -9,7 +9,7 @@ This guide covers three things:
 
 | Service | What it does | Cost |
 |---|---|---|
-| Cloudflare Pages (free plan) | Hosting, HTTPS, checkout and Print Club functions, contact and newsletter forms | Free: 500 builds a month, unlimited visitors, 100,000 function requests a day. No credits to run out. Check cloudflare.com/plans for current limits |
+| Cloudflare Workers (free plan) | Hosting, HTTPS, checkout and Print Club, contact and newsletter forms, daily Print Club job | Free: page and image requests are not limited; 100,000 checkout/form requests a day. No credits to run out. Check cloudflare.com/plans for current limits |
 | Cloudflare D1 (free) | Small database for live Reserved/Sold status, Print Club members, newsletter sign-ups and messages | Free: 5 GB, millions of reads a day |
 | Pages CMS | Edit works, prices and status in the browser | Free |
 | Stripe | Card, Apple Pay and Google Pay | No monthly fee; a fee per sale |
@@ -20,25 +20,28 @@ This guide covers three things:
 
 ---
 
-## 1. Put the site online (Cloudflare Pages)
+## 1. Put the site online (Cloudflare Workers)
 
-Everything below is in the Cloudflare dashboard (dash.cloudflare.com). No command line is needed.
+Everything below is in the Cloudflare dashboard (dash.cloudflare.com). No command line is needed. The site runs as one Worker: it serves the pages and runs checkout, the Print Club, the forms and the daily Print Club job.
 
-1. **Create the project.** Make a free Cloudflare account. Go to **Workers & Pages → Create → Pages → Connect to Git**, connect GitHub and pick the **AcidicPixel/Fast-Book** repository. Choose your production branch (`main`, once this branch is merged).
-2. **Build settings:**
-   - Framework preset: **None**
-   - Build command: `npm run build`
-   - Build output directory: `_site`
-   - Root directory (advanced): `paints-by-euro`
-   - Environment variable: `SITE_URL` = your site's address, e.g. `https://paints-by-euro.pages.dev` (later, your own domain).
+1. **Create the application.** Make a free Cloudflare account. Go to **Workers & Pages → Create application → Import a repository** (Continue with GitHub), and pick **AcidicPixel/Fast-Book**.
+2. **Fill in the build settings:**
 
-   Then click **Save and Deploy**. The first build takes a few minutes, because it makes all the image sizes.
-3. **Database.** Go to **Workers & Pages → D1 SQL database → Create**, and name it `paints-by-euro`. Then open your Pages project → **Settings → Bindings → Add → D1 database**, set the variable name to `DB`, and choose that database. The site creates its table by itself on first use.
-4. **Runtime setting.** In the Pages project, go to **Settings → Runtime → Compatibility flags**. Add `nodejs_compat` for both Production and Preview, and set the compatibility date to `2025-09-01` or later.
-5. **Keys and settings** (sections 5–9) go in **Settings → Variables and Secrets**. Choose **Encrypt** for anything secret. After adding or changing them, open **Deployments** and choose **Retry deployment** on the latest one, so the site picks them up.
-6. **Save builds.** In **Settings → Builds → Branch control**, set **Preview branches** to **None**, so only the production branch builds. The free plan allows 500 builds a month, which is plenty for one site.
-7. **Your own domain** (optional): **Custom domains → Set up a custom domain**. HTTPS is automatic.
-8. **Forms.** The contact form emails each message to you; this needs the Resend setup in section 5. It also keeps a copy. Newsletter sign-ups are saved too. Download both as CSV files at `/print-club/admin/`, using the `CLUB_ADMIN_PASSWORD` from section 9.
+   | Field | Value |
+   |---|---|
+   | Project name | `paints-by-euro` |
+   | Build command | `npm run build` |
+   | Deploy command | `npx wrangler deploy` |
+   | Non-production branch deploy command | `npx wrangler versions upload` (the default) |
+   | Path / Root directory (under **Advanced settings**) | `paints-by-euro` |
+   | Build variable | `SITE_URL` = your site's address, e.g. `https://paints-by-euro.<your-subdomain>.workers.dev` (later, your own domain) |
+
+   Click **Deploy**. The first build takes a few minutes, because it makes all the image sizes.
+3. **Database.** Nothing to do. The settings file (`wrangler.jsonc`) asks for a D1 database called `paints-by-euro`, and Cloudflare creates it on the first deploy. The site creates its table by itself. If the deploy log says it couldn't create the database, go to **Storage & Databases → D1 → Create**, name it `paints-by-euro`, and tell me its ID.
+4. **Keys and settings** (sections 5–9) go in the Worker's **Settings → Variables and Secrets**. Choose **Secret** for anything secret. Also add `SITE_URL` there, with the same value as in step 2. Changes take effect straight away.
+5. **Your own domain** (optional): in the Worker, go to **Settings → Domains & Routes → Add → Custom domain**. HTTPS is automatic. Then update `SITE_URL` in both places.
+6. **Save builds** (optional): in **Settings → Build → Branch control**, turn off builds for non-production branches.
+7. **Forms.** The contact form emails each message to you; this needs the Resend setup in section 5. It also keeps a copy. Newsletter sign-ups are saved too. Download both as CSV files at `/print-club/admin/`, using the `CLUB_ADMIN_PASSWORD` from section 9.
 
 ## 2. Edit the site without code (Pages CMS)
 
@@ -117,12 +120,12 @@ Your answer decides the text of that line. It may also mean switching on Stripe 
 
 1. Make a free account at resend.com. Add and verify your domain. This needs your own domain; until then Resend only sends to your own address.
 2. Create an API key.
-3. In Cloudflare (Pages project → **Settings → Variables and Secrets**), add:
+3. In Cloudflare (your Worker → **Settings → Variables and Secrets**), add:
    - `RESEND_API_KEY`: the key
    - `EMAIL_FROM`: e.g. `Paints by Euro <orders@yourdomain.com>`
    - `ARTIST_EMAIL`: where sale notices go (your email)
 
-Without a key, the site still works, but the emails are only written to the function log (Pages project → **Deployments → View details → Functions → Real-time logs**). Contact messages are still saved, and you can download them at `/print-club/admin/`.
+Without a key, the site still works, but the emails are only written to the function log (your Worker → **Observability → Logs**). Contact messages are still saved, and you can download them at `/print-club/admin/`.
 
 ---
 
@@ -136,7 +139,7 @@ Without a key, the site still works, but the emails are only written to the func
    - Copy the **Signing secret** (`whsec_…`). In Cloudflare, add it as `STRIPE_WEBHOOK_SECRET`.
 4. **Settings → Payment methods:** choose which methods to offer (cards, Apple Pay, Google Pay…).
 5. **Settings → Business → Public details:** the name buyers see on their card statement.
-6. In Cloudflare, open **Deployments** and choose **Retry deployment** so the new keys are used.
+6. Keys added in **Variables and Secrets** take effect straight away. No redeploy is needed.
 7. Test: buy a work with card `4242 4242 4242 4242`, any future date and any CVC. Then check that:
    - the work shows **Reserved** while you are on the Stripe page;
    - after paying, it shows **Sold**, and the buyer and artist emails arrive;
@@ -201,13 +204,7 @@ The Print Club uses **Stripe Billing** (subscriptions) and **PayPal Subscription
 ### Member self-service and your member list
 1. In Cloudflare, add `CLUB_LINK_SECRET`: a long random text of 32 or more characters. It signs the "Manage my Print Club" email links.
 2. Add `CLUB_ADMIN_PASSWORD`: a password of 10 or more characters. You use it at `/print-club/admin/` to see each month's members and addresses, and to download them as a CSV file.
-3. **Daily job for PayPal skips.** Cloudflare Pages can't run scheduled jobs, so one tiny free Worker does it:
-   - add `CRON_SECRET` (24 or more random characters) to the Pages project;
-   - go to **Workers & Pages → Create → Worker**, name it `paints-by-euro-daily`, deploy it, then **Edit code**, paste the contents of `paints-by-euro/cron-worker/worker.js`, and deploy again;
-   - in the Worker's **Settings → Variables and Secrets**, add `SITE_URL` (your site's address) and `CRON_SECRET` (the same value as on the site);
-   - in **Settings → Triggers → Cron Triggers**, add `0 10 * * *` (every day at 10:00 UTC).
-
-   It wakes PayPal members up again after a skipped month. Stripe does this by itself.
+3. **Daily job for PayPal skips:** nothing to set up. The Worker runs it every day at 10:00 UTC. It wakes PayPal members up again after a skipped month; Stripe does this by itself.
 4. Members can change their address, skip one month or cancel from **Manage my Print Club** in the footer. They get an email link; there's no account to create. Card members use the Stripe portal. PayPal members change their address on the site and cancel in PayPal.
 
 ### Changing the price (no code)
@@ -221,7 +218,7 @@ Do this at the same time as section 8:
 - create live PayPal plans and put their IDs in the `PAYPAL_PLAN_…` variables;
 - add the new webhook events to the live webhooks.
 
-## All environment variables (Cloudflare Pages → Settings → Variables and Secrets)
+## All environment variables (your Worker → Settings → Variables and Secrets)
 
 | Name | Example | Needed for |
 |---|---|---|
@@ -238,6 +235,6 @@ Do this at the same time as section 8:
 | `PAYPAL_PLAN_GIFT_3`, `PAYPAL_PLAN_GIFT_12` | `P-…` | Optional gift plans (PayPal) |
 | `CLUB_LINK_SECRET` | 32+ random characters | Print Club member links |
 | `CLUB_ADMIN_PASSWORD` | 10+ characters | Print Club member list |
-| `CRON_SECRET` | 24+ random characters | Daily Print Club job (also on the cron Worker) |
+| `CRON_SECRET` | 24+ random characters | Optional: only if you want to run the daily job by hand at `/api/club/resume` |
 | `SITE_URL` | `https://paintsbyeuro.com` | Links in emails and the sitemap (also a build variable) |
 | `ALLOW_LIVE_PAYMENTS` | `true` (only when going live) | Live payments |

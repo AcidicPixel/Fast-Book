@@ -8,9 +8,14 @@
     "placeholders": "node scripts/make-placeholders.mjs",
     "test": "eleventy --quiet && node --test tests/*.test.mjs"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@11ty/eleventy": "3.1.8",
     "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "wrangler": "^4.150.0"
   }
 }

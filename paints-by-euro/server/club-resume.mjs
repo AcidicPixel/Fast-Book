@@ -1,7 +1,7 @@
 // POST /api/club/resume — run daily: reactivates PayPal memberships whose skipped
 // month has passed. (Stripe resumes by itself at the pause's resumes_at time.)
-// Called once a day by the small cron Worker in cron-worker/ with the header
-// "x-cron-secret: <CRON_SECRET>".
+// Runs daily from the Worker's cron (worker.js). It can also be called by hand
+// with the header "x-cron-secret: <CRON_SECRET>".
 import { timingSafeEqual, createHash } from "node:crypto";
 import { paypal } from "./_lib/paypal.mjs";
 import { allMembers, updateMember, memberKey } from "./_lib/club.mjs";
