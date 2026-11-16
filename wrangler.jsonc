@@ -20,5 +20,7 @@
   "triggers": { "crons": ["0 10 * * *"] },
   // Keep the variables you add in the dashboard when the site is redeployed.
   "keep_vars": true,
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Settings for preview builds ("npx wrangler preview"). Previews don't run the daily cron.
+  "previews": {}
 }
