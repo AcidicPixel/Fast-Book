@@ -1,8 +1,7 @@
 <footer class="site-footer">
   <div class="footer-grid">
     {%- if page.url != "/" %}
-    <form class="newsletter" name="newsletter" method="POST" action="/thanks/?form=newsletter" data-netlify="true" netlify-honeypot="company">
-      <input type="hidden" name="form-name" value="newsletter">
+    <form class="newsletter" name="newsletter" method="POST" action="/api/newsletter">
       <p class="hp"><label>Leave empty <input name="company" tabindex="-1" autocomplete="off"></label></p>
       <label class="newsletter-label" for="newsletter-email">New pieces, Print Club news and exhibitions, by email</label>
       <div class="newsletter-row">

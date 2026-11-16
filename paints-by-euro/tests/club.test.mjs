@@ -70,9 +70,9 @@ const fn = {};
 let club;
 before(async () => {
   for (const n of ["club-config", "club-stripe-checkout", "club-paypal-subscription", "club-manage-link", "club-me", "club-portal", "club-skip", "club-address", "club-members", "club-resume", "stripe-webhook", "paypal-webhook"]) {
-    fn[n] = (await import(`../netlify/functions/${n}.mjs`)).default;
+    fn[n] = (await import(`../server/${n}.mjs`)).default;
   }
-  club = await import("../netlify/functions/_lib/club.mjs");
+  club = await import("../server/_lib/club.mjs");
 });
 const post = (n, body, headers = {}) => fn[n](new Request(`https://x/api/${n}`, { method: "POST", headers: { "content-type": "application/json", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) }));
 const get = (n, qs = "", headers = {}) => fn[n](new Request(`https://x/api/${n}${qs}`, { headers }));

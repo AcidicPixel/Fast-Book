@@ -19,7 +19,8 @@ export const handler = (method, fn) => async (req, context) => {
   } catch (err) {
     const status = err.status || 500;
     if (status >= 500) console.error(err);
-    return json({ error: status >= 500 ? "Something went wrong. No money was taken. Please try again." : err.message }, status);
+    // 503 = not set up yet: say so. Other server errors get a safe general message.
+    return json({ error: status >= 500 && status !== 503 ? "Something went wrong. No money was taken. Please try again." : err.message }, status);
   }
 };
 

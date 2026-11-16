@@ -1,0 +1,231 @@
+{
+  "siteName": "Paints by Euro",
+  "currency": "GBP",
+  "taxRule": "[tax rule]",
+  "shipping": {
+    "regions": [
+      {
+        "id": "home",
+        "label": "[Home country]",
+        "cost": 25,
+        "countries": [
+          "GB"
+        ]
+      },
+      {
+        "id": "europe",
+        "label": "Europe",
+        "cost": 45,
+        "countries": [
+          "AT",
+          "BE",
+          "BG",
+          "HR",
+          "CY",
+          "CZ",
+          "DK",
+          "EE",
+          "FI",
+          "FR",
+          "DE",
+          "GR",
+          "HU",
+          "IE",
+          "IT",
+          "LV",
+          "LT",
+          "LU",
+          "MT",
+          "NL",
+          "PL",
+          "PT",
+          "RO",
+          "SK",
+          "SI",
+          "ES",
+          "SE",
+          "NO",
+          "CH",
+          "IS",
+          "LI"
+        ]
+      },
+      {
+        "id": "world",
+        "label": "Rest of the world",
+        "cost": 80,
+        "countries": [
+          "*"
+        ]
+      }
+    ]
+  },
+  "works": [
+    {
+      "slug": "oil-01",
+      "key": "oil-01--0",
+      "title": "Oil I",
+      "medium": "oil",
+      "materials": "Oil on canvas",
+      "size": "32 × 41 × 2 cm",
+      "year": 2026,
+      "price": 1200,
+      "status": "Available",
+      "url": "/collections/oil-01/",
+      "thumb": "/img/works-oil-01-placeholder-oil-01-main-480.webp"
+    },
+    {
+      "slug": "oil-02",
+      "key": "oil-02--0",
+      "title": "Oil II",
+      "medium": "oil",
+      "materials": "Oil on canvas",
+      "size": "62 × 51 × 2 cm",
+      "year": 2026,
+      "price": 950,
+      "status": "Available",
+      "url": "/collections/oil-02/",
+      "thumb": "/img/works-oil-02-placeholder-oil-02-main-480.webp"
+    },
+    {
+      "slug": "pen-01",
+      "key": "pen-01--0",
+      "title": "Pen I",
+      "medium": "pen",
+      "materials": "Pen and brown ink on tan paper",
+      "size": "23 × 25 cm",
+      "year": 2026,
+      "price": 340,
+      "status": "Available",
+      "url": "/collections/pen-01/",
+      "thumb": "/img/works-pen-01-placeholder-pen-01-main-480.webp"
+    },
+    {
+      "slug": "oil-03",
+      "key": "oil-03--0",
+      "title": "Oil III",
+      "medium": "oil",
+      "materials": "Oil on panel",
+      "size": "48 × 76 × 2 cm",
+      "year": 2025,
+      "price": 780,
+      "status": "Reserved",
+      "url": "/collections/oil-03/",
+      "thumb": "/img/works-oil-03-placeholder-oil-03-main-480.webp"
+    },
+    {
+      "slug": "pen-02",
+      "key": "pen-02--0",
+      "title": "Pen II",
+      "medium": "pen",
+      "materials": "Pen and brown ink on cream paper",
+      "size": "25 × 33 cm",
+      "year": 2025,
+      "price": 280,
+      "status": "Available",
+      "url": "/collections/pen-02/",
+      "thumb": "/img/works-pen-02-placeholder-pen-02-main-480.webp"
+    },
+    {
+      "slug": "oil-04",
+      "key": "oil-04--0",
+      "title": "Oil IV",
+      "medium": "oil",
+      "materials": "Oil on canvas",
+      "size": "110 × 85 × 3 cm",
+      "year": 2025,
+      "price": 1100,
+      "status": "Sold",
+      "url": "/collections/oil-04/",
+      "thumb": "/img/works-oil-04-placeholder-oil-04-main-480.webp"
+    },
+    {
+      "slug": "pen-03",
+      "key": "pen-03--0",
+      "title": "Pen III",
+      "medium": "pen",
+      "materials": "Pen and ink with grey wash on paper",
+      "size": "28 × 19 cm",
+      "year": 2025,
+      "price": 360,
+      "status": "Sold",
+      "url": "/collections/pen-03/",
+      "thumb": "/img/works-pen-03-placeholder-pen-03-main-480.webp"
+    },
+    {
+      "slug": "oil-05",
+      "key": "oil-05--0",
+      "title": "Oil V",
+      "medium": "oil",
+      "materials": "Oil on canvas",
+      "size": "89 × 94 × 3 cm",
+      "year": 2024,
+      "price": 0,
+      "status": "Not for sale",
+      "url": "/collections/oil-05/",
+      "thumb": "/img/works-oil-05-placeholder-oil-05-main-480.webp"
+    },
+    {
+      "slug": "pen-04",
+      "key": "pen-04--0",
+      "title": "Pen IV",
+      "medium": "pen",
+      "materials": "Pen and brown ink on cream laid paper",
+      "size": "30 × 36 cm",
+      "year": 2024,
+      "price": 300,
+      "status": "Available",
+      "url": "/collections/pen-04/",
+      "thumb": "/img/works-pen-04-placeholder-pen-04-main-480.webp"
+    }
+  ],
+  "prints": [
+    {
+      "slug": "print-oil-01",
+      "type": "print",
+      "title": "Oil I — giclée print",
+      "size": "[print size]",
+      "edition": "[edition, e.g. open edition / limited to 50]",
+      "price": 60,
+      "thumb": "/img/products-placeholder-print-oil-01-480.webp",
+      "url": "/prints/#print-oil-01"
+    },
+    {
+      "slug": "print-oil-05",
+      "type": "print",
+      "title": "Oil V — giclée print",
+      "size": "[print size]",
+      "edition": "[edition]",
+      "price": 75,
+      "thumb": "/img/products-placeholder-print-oil-05-480.webp",
+      "url": "/prints/#print-oil-05"
+    },
+    {
+      "slug": "card-oil-03",
+      "type": "card",
+      "title": "Oil III — greeting card",
+      "size": "[card size], blank inside, with envelope",
+      "edition": "Card",
+      "price": 4,
+      "thumb": "/img/products-placeholder-card-oil-03-480.webp",
+      "url": "/prints/#card-oil-03"
+    },
+    {
+      "slug": "postcard-pen-02",
+      "type": "card",
+      "title": "Pen II — postcard",
+      "size": "[postcard size]",
+      "edition": "Postcard",
+      "price": 2,
+      "thumb": "/img/products-placeholder-postcard-pen-02-480.webp",
+      "url": "/prints/#postcard-pen-02"
+    }
+  ],
+  "printClub": {
+    "countries": [
+      "GB"
+    ],
+    "billingDay": 1,
+    "giftsEnabled": false
+  }
+}

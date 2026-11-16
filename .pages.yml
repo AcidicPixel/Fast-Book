@@ -64,8 +64,6 @@ content:
       - { name: taglineOptions, label: "Tagline options (for reference)", type: string, list: true }
       - { name: intro, label: "Home page introduction (30–50 words)", type: text }
       - { name: introOptions, label: "Introduction options (for reference)", type: text, list: true }
-      - { name: statement, label: "Home page artist statement (40–60 words)", type: text }
-      - { name: statementOptions, label: "Statement options (for reference)", type: text, list: true }
       - { name: description, label: "Search engine description", type: text }
       - { name: email, label: Email, type: string }
       - { name: currency, label: "Currency (3-letter code, e.g. GBP, EUR, USD)", type: string }

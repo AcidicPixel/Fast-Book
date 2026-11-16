@@ -1,5 +1,5 @@
 node_modules/
 _site/
-.netlify/
 .cache/
-netlify/functions/_lib/catalog.generated.json
+server/_lib/catalog.generated.mjs
+.wrangler/

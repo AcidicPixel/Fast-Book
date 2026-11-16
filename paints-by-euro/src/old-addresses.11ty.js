@@ -1,5 +1,5 @@
 // Fallback redirect pages for the old /work and /contact addresses, for hosts
-// that don't read _redirects. On Netlify the _redirects rules answer first.
+// that don't read _redirects. On Cloudflare Pages the _redirects rules answer first.
 import { readdirSync } from "node:fs";
 
 const slugs = readdirSync("src/works").filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""));

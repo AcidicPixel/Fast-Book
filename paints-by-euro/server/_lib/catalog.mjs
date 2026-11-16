@@ -1,6 +1,6 @@
 // Prices, statuses and shipping come from the site's content files.
-// catalog.generated.json is written by the site build (npm run build).
-import generated from "./catalog.generated.json" with { type: "json" };
+// catalog.generated.mjs is written by the site build (npm run build).
+import generated from "./catalog.generated.mjs";
 import { ALL_COUNTRIES } from "./countries.mjs";
 import { HttpError } from "./http.mjs";
 

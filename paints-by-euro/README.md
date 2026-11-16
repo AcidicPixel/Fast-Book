@@ -1,7 +1,7 @@
 # Paints by Euro
 
 Portfolio and shop for an artist who works in oil paint and pen, with prints, cards, postcards and a monthly Print Club.
-Static site (Eleventy) + Netlify serverless functions for Stripe Checkout and PayPal.
+Static site (Eleventy) on Cloudflare Pages, with Pages Functions for Stripe and PayPal, and Cloudflare D1 for live data.
 
 The artist's setup guide, the list of placeholders to replace and the steps to go live are in **[SETUP-FOR-ARTIST.md](SETUP-FOR-ARTIST.md)**.
 
@@ -80,21 +80,30 @@ There is no blue anywhere on the site. Body text stays graphite (7:1 or more). C
 
 ## Live status (Reserved / Sold)
 
-The artist sets status in the content file. Checkout adds a live layer in Netlify Blobs:
+The artist sets status in the content file. Checkout adds a live layer in Cloudflare D1 (`server/_lib/store.mjs`, a key-value table with conditional writes):
 - Starting checkout writes a hold for 31 minutes. The write is conditional, so two buyers can't both get it. (Stripe's shortest session is 30 minutes; the extra minute covers clock differences.)
 - No payment in that time: the hold simply expires and the work shows Available again. Stripe's `checkout.session.expired` event or the cancel page releases it sooner.
 - Only a signature-verified webhook marks a work Sold and sends the emails. The return page is never trusted.
 - Repeated webhooks don't repeat emails. A second payment for an already-sold work emails the artist to refund it.
 - If a sold work comes back (e.g. refunded), add 1 to its **Relist counter** in the CMS.
 
+## Hosting (Cloudflare Pages)
+
+- `functions/api/[[route]].js` is the only Pages Function. It routes each `/api/...` request to the handler in `server/` that declares that path, copies Cloudflare variables into `process.env`, and connects the D1 binding `DB`.
+- Needs the compatibility flag `nodejs_compat` (for `node:crypto` and `Buffer`).
+- `src/_redirects` (old /work and /contact addresses) and `src/_headers` (security and cache headers) are copied to `_site`.
+- Forms post to `/api/contact` and `/api/newsletter` and work without JavaScript. They redirect to `/thanks/`.
+- Scheduled work: `cron-worker/worker.js` is a separate free Worker with a daily Cron Trigger. It calls `POST /api/club/resume` with `x-cron-secret`.
+
 ## Develop
 
 ```bash
 cd paints-by-euro
 npm install
-npm start          # http://localhost:8080 (pages only; /api needs `netlify dev`)
-npm test           # builds, then runs the payment tests with mock Stripe/PayPal
-npx netlify dev    # pages + functions locally, with your test keys in .env
+npm start          # http://localhost:8080 (pages only)
+npm test           # builds, then runs all payment, Print Club and form tests with mock Stripe/PayPal
+npm run build && npx wrangler pages dev _site --compatibility-flags=nodejs_compat --d1 DB=local
+                   # pages + functions + local D1, as on Cloudflare (keys as --binding NAME=value)
 ```
 
 Environment variables are listed in SETUP-FOR-ARTIST.md. Live keys are refused unless `ALLOW_LIVE_PAYMENTS=true`.

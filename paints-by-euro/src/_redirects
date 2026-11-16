@@ -1,11 +1,11 @@
 # Old addresses → new addresses (permanent). Query strings are kept.
-/work                /collections/            301!
-/work/               /collections/            301!
-/work/pencil-01/     /collections/pen-01/     301!
-/work/pencil-02/     /collections/pen-02/     301!
-/work/pencil-03/     /collections/pen-03/     301!
-/work/pencil-04/     /collections/pen-04/     301!
-/work/*              /collections/:splat      301!
-/contact             /commission-contact/     301!
-/contact/            /commission-contact/     301!
-/contact/*           /commission-contact/     301!
+/work                /collections/            301
+/work/               /collections/            301
+/work/pencil-01/     /collections/pen-01/     301
+/work/pencil-02/     /collections/pen-02/     301
+/work/pencil-03/     /collections/pen-03/     301
+/work/pencil-04/     /collections/pen-04/     301
+/work/*              /collections/:splat      301
+/contact             /commission-contact/     301
+/contact/            /commission-contact/     301
+/contact/*           /commission-contact/     301

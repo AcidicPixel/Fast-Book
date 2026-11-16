@@ -9,7 +9,8 @@ This guide covers three things:
 
 | Service | What it does | Cost |
 |---|---|---|
-| Netlify (free plan) | Hosting, HTTPS, checkout functions, contact and newsletter forms, live Sold/Reserved status | Free for a site this size. Check netlify.com/pricing for current limits |
+| Cloudflare Pages (free plan) | Hosting, HTTPS, checkout and Print Club functions, contact and newsletter forms | Free: 500 builds a month, unlimited visitors, 100,000 function requests a day. No credits to run out. Check cloudflare.com/plans for current limits |
+| Cloudflare D1 (free) | Small database for live Reserved/Sold status, Print Club members, newsletter sign-ups and messages | Free: 5 GB, millions of reads a day |
 | Pages CMS | Edit works, prices and status in the browser | Free |
 | Stripe | Card, Apple Pay and Google Pay | No monthly fee; a fee per sale |
 | PayPal | PayPal payments | No monthly fee; a fee per sale |
@@ -19,13 +20,25 @@ This guide covers three things:
 
 ---
 
-## 1. Put the site online (Netlify)
+## 1. Put the site online (Cloudflare Pages)
 
-1. Make a free account at netlify.com and choose **Add new site → Import an existing project → GitHub**. Pick this repository.
-2. Netlify reads `netlify.toml` and builds the `paints-by-euro` folder. Leave the build settings as they are.
-3. Go to **Site configuration → Forms** and turn on **form detection**. Then redeploy once. Under **Forms → Form notifications**, add an email notification so contact messages reach you.
-4. HTTPS is switched on automatically. To use your own domain, go to **Domain management**.
-5. The newsletter sign-ups appear under **Forms → newsletter**. Export them when you send an update. When the list grows, you can move it to a newsletter service such as Buttondown, which is free for small lists.
+Everything below is in the Cloudflare dashboard (dash.cloudflare.com). No command line is needed.
+
+1. **Create the project.** Make a free Cloudflare account. Go to **Workers & Pages → Create → Pages → Connect to Git**, connect GitHub and pick the **AcidicPixel/Fast-Book** repository. Choose your production branch (`main`, once this branch is merged).
+2. **Build settings:**
+   - Framework preset: **None**
+   - Build command: `npm run build`
+   - Build output directory: `_site`
+   - Root directory (advanced): `paints-by-euro`
+   - Environment variable: `SITE_URL` = your site's address, e.g. `https://paints-by-euro.pages.dev` (later, your own domain).
+
+   Then click **Save and Deploy**. The first build takes a few minutes, because it makes all the image sizes.
+3. **Database.** Go to **Workers & Pages → D1 SQL database → Create**, and name it `paints-by-euro`. Then open your Pages project → **Settings → Bindings → Add → D1 database**, set the variable name to `DB`, and choose that database. The site creates its table by itself on first use.
+4. **Runtime setting.** In the Pages project, go to **Settings → Runtime → Compatibility flags**. Add `nodejs_compat` for both Production and Preview, and set the compatibility date to `2025-09-01` or later.
+5. **Keys and settings** (sections 5–9) go in **Settings → Variables and Secrets**. Choose **Encrypt** for anything secret. After adding or changing them, open **Deployments** and choose **Retry deployment** on the latest one, so the site picks them up.
+6. **Save builds.** In **Settings → Builds → Branch control**, set **Preview branches** to **None**, so only the production branch builds. The free plan allows 500 builds a month, which is plenty for one site.
+7. **Your own domain** (optional): **Custom domains → Set up a custom domain**. HTTPS is automatic.
+8. **Forms.** The contact form emails each message to you; this needs the Resend setup in section 5. It also keeps a copy. Newsletter sign-ups are saved too. Download both as CSV files at `/print-club/admin/`, using the `CLUB_ADMIN_PASSWORD` from section 9.
 
 ## 2. Edit the site without code (Pages CMS)
 
@@ -104,26 +117,26 @@ Your answer decides the text of that line. It may also mean switching on Stripe 
 
 1. Make a free account at resend.com. Add and verify your domain. This needs your own domain; until then Resend only sends to your own address.
 2. Create an API key.
-3. In Netlify → **Site configuration → Environment variables**, add:
+3. In Cloudflare (Pages project → **Settings → Variables and Secrets**), add:
    - `RESEND_API_KEY`: the key
    - `EMAIL_FROM`: e.g. `Paints by Euro <orders@yourdomain.com>`
    - `ARTIST_EMAIL`: where sale notices go (your email)
 
-Without a key, the site still works, but the emails are only written to the Netlify function log.
+Without a key, the site still works, but the emails are only written to the function log (Pages project → **Deployments → View details → Functions → Real-time logs**). Contact messages are still saved, and you can download them at `/print-club/admin/`.
 
 ---
 
 ## 6. Stripe: set up in test mode
 
 1. Make an account at stripe.com. Keep the **Test mode** switch on (top right).
-2. **Developers → API keys:** copy the **Secret key** (`sk_test_…`). In Netlify, add it as `STRIPE_SECRET_KEY`.
+2. **Developers → API keys:** copy the **Secret key** (`sk_test_…`). In Cloudflare, add it as `STRIPE_SECRET_KEY`.
 3. **Developers → Webhooks → Add endpoint:**
    - URL: `https://<your-site>/api/stripe/webhook`
    - Events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`
-   - Copy the **Signing secret** (`whsec_…`). In Netlify, add it as `STRIPE_WEBHOOK_SECRET`.
+   - Copy the **Signing secret** (`whsec_…`). In Cloudflare, add it as `STRIPE_WEBHOOK_SECRET`.
 4. **Settings → Payment methods:** choose which methods to offer (cards, Apple Pay, Google Pay…).
 5. **Settings → Business → Public details:** the name buyers see on their card statement.
-6. In Netlify, choose **Deploys → Trigger deploy** so the new keys are used.
+6. In Cloudflare, open **Deployments** and choose **Retry deployment** so the new keys are used.
 7. Test: buy a work with card `4242 4242 4242 4242`, any future date and any CVC. Then check that:
    - the work shows **Reserved** while you are on the Stripe page;
    - after paying, it shows **Sold**, and the buyer and artist emails arrive;
@@ -133,14 +146,14 @@ Without a key, the site still works, but the emails are only written to the Netl
 
 1. You need a PayPal **Business** account (free; upgrade a personal one at paypal.com).
 2. Go to developer.paypal.com, log in, and open **Apps & Credentials**. Choose **Sandbox → Create App** (type: Merchant).
-3. Copy the **Client ID** and **Secret**. In Netlify, add:
+3. Copy the **Client ID** and **Secret**. In Cloudflare, add:
    - `PAYPAL_CLIENT_ID`
    - `PAYPAL_CLIENT_SECRET`
    - `PAYPAL_ENV` = `sandbox`
 4. In the app, open **Webhooks → Add webhook:**
    - URL: `https://<your-site>/api/paypal/webhook`
    - Events: `Payment capture completed`, `Payment capture denied`
-   - Copy the **Webhook ID** and add it in Netlify as `PAYPAL_WEBHOOK_ID`.
+   - Copy the **Webhook ID** and add it in Cloudflare as `PAYPAL_WEBHOOK_ID`.
 5. Trigger a deploy. Test with the sandbox **personal** account listed under **Sandbox → Accounts** (it has a test email and password).
 
 ---
@@ -153,19 +166,19 @@ The site refuses live keys until you deliberately switch them on. Do this only w
 1. Choose **Activate account** and give your business details, bank account and ID.
 2. Turn **Test mode** off. Copy the live **Secret key** (`sk_live_…`).
 3. Add the webhook again in live mode (same URL and events). This gives you a new live signing secret.
-4. In Netlify, replace `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` with the live values.
+4. In Cloudflare, replace `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` with the live values.
 
 **PayPal**
 1. In developer.paypal.com, choose **Apps & Credentials → Live → Create App**. Copy the live Client ID and Secret.
 2. Add the live webhook (same URL and events) and copy its Webhook ID.
-3. In Netlify, replace `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` and `PAYPAL_WEBHOOK_ID`. Set `PAYPAL_ENV` = `live`.
+3. In Cloudflare, replace `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` and `PAYPAL_WEBHOOK_ID`. Set `PAYPAL_ENV` = `live`.
 
 **Then**
-1. In Netlify, add `ALLOW_LIVE_PAYMENTS` = `true`. This is the safety switch.
+1. In Cloudflare, add `ALLOW_LIVE_PAYMENTS` = `true`. This is the safety switch.
 2. Trigger a deploy. The "Test mode" label disappears from the checkout.
 3. Buy something cheap yourself with each method, check that the emails arrive, then refund both payments in the Stripe and PayPal dashboards. Add 1 to that work's **Relist counter** to make it Available again.
 
-Never paste keys into the code, the CMS or a chat. They belong only in Netlify's environment variables.
+Never paste keys into the code, the CMS or a chat. They belong only in Cloudflare's Variables and Secrets (encrypted).
 
 ## 9. Print Club subscriptions
 
@@ -180,15 +193,22 @@ The Print Club uses **Stripe Billing** (subscriptions) and **PayPal Subscription
 
 ### PayPal Subscriptions (sandbox)
 1. In developer.paypal.com (sandbox), or in your sandbox business account under **Pay & Get Paid → Subscriptions**, create a product "Print Club".
-2. Create a **plan**: monthly, the monthly amount, no end date (infinite cycles). Copy its plan ID (starts `P-`) into Netlify as `PAYPAL_PLAN_MONTHLY`.
+2. Create a **plan**: monthly, the monthly amount, no end date (infinite cycles). Copy its plan ID (starts `P-`) into Cloudflare as `PAYPAL_PLAN_MONTHLY`.
 3. Optional gift plans: a plan that bills once every 3 months for 1 cycle (`PAYPAL_PLAN_GIFT_3`), and one that bills once every 12 months for 1 cycle (`PAYPAL_PLAN_GIFT_12`).
 4. On your existing webhook (`/api/paypal/webhook`), add these events: `Billing subscription activated`, `Billing subscription updated`, `Billing subscription cancelled`, `Billing subscription expired`, `Billing subscription suspended`, `Payment sale completed`.
 5. Test with your sandbox personal account. The first payment is taken on the billing date.
 
 ### Member self-service and your member list
-1. In Netlify, add `CLUB_LINK_SECRET`: a long random text of 32 or more characters. It signs the "Manage my Print Club" email links.
+1. In Cloudflare, add `CLUB_LINK_SECRET`: a long random text of 32 or more characters. It signs the "Manage my Print Club" email links.
 2. Add `CLUB_ADMIN_PASSWORD`: a password of 10 or more characters. You use it at `/print-club/admin/` to see each month's members and addresses, and to download them as a CSV file.
-3. Members can change their address, skip one month or cancel from **Manage my Print Club** in the footer. They get an email link; there's no account to create. Card members use the Stripe portal. PayPal members change their address on the site and cancel in PayPal.
+3. **Daily job for PayPal skips.** Cloudflare Pages can't run scheduled jobs, so one tiny free Worker does it:
+   - add `CRON_SECRET` (24 or more random characters) to the Pages project;
+   - go to **Workers & Pages → Create → Worker**, name it `paints-by-euro-daily`, deploy it, then **Edit code**, paste the contents of `paints-by-euro/cron-worker/worker.js`, and deploy again;
+   - in the Worker's **Settings → Variables and Secrets**, add `SITE_URL` (your site's address) and `CRON_SECRET` (the same value as on the site);
+   - in **Settings → Triggers → Cron Triggers**, add `0 10 * * *` (every day at 10:00 UTC).
+
+   It wakes PayPal members up again after a skipped month. Stripe does this by itself.
+4. Members can change their address, skip one month or cancel from **Manage my Print Club** in the footer. They get an email link; there's no account to create. Card members use the Stripe portal. PayPal members change their address on the site and cancel in PayPal.
 
 ### Changing the price (no code)
 - **Stripe:** add a new monthly price to the Print Club product and move the lookup key `print_club_monthly` to it ("Transfer lookup key"). New members pay the new price. **Current members keep their old price** until you move them yourself, in Stripe under each subscription → Update subscription.
@@ -201,7 +221,7 @@ Do this at the same time as section 8:
 - create live PayPal plans and put their IDs in the `PAYPAL_PLAN_…` variables;
 - add the new webhook events to the live webhooks.
 
-## All environment variables
+## All environment variables (Cloudflare Pages → Settings → Variables and Secrets)
 
 | Name | Example | Needed for |
 |---|---|---|
@@ -218,4 +238,6 @@ Do this at the same time as section 8:
 | `PAYPAL_PLAN_GIFT_3`, `PAYPAL_PLAN_GIFT_12` | `P-…` | Optional gift plans (PayPal) |
 | `CLUB_LINK_SECRET` | 32+ random characters | Print Club member links |
 | `CLUB_ADMIN_PASSWORD` | 10+ characters | Print Club member list |
+| `CRON_SECRET` | 24+ random characters | Daily Print Club job (also on the cron Worker) |
+| `SITE_URL` | `https://paintsbyeuro.com` | Links in emails and the sitemap (also a build variable) |
 | `ALLOW_LIVE_PAYMENTS` | `true` (only when going live) | Live payments |

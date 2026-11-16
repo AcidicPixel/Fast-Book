@@ -8,7 +8,7 @@
 //   create a new plan in PayPal and put its ID in the variable. Current members
 //   stay on their old plan.
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { getStore } from "@netlify/blobs";
+import { d1Store } from "./store.mjs";
 import { catalog, money } from "./catalog.mjs";
 import { HttpError, siteUrl } from "./http.mjs";
 import { sendEmail } from "./email.mjs";
@@ -46,7 +46,7 @@ export const addMonths = (month, n) => {
 /* ---------------------------------------------------------------- storage */
 export function clubStore() {
   if (globalThis.__TEST_CLUB_STORE__) return globalThis.__TEST_CLUB_STORE__;
-  return getStore({ name: "print-club", consistency: "strong" });
+  return d1Store("print-club");
 }
 export const memberKey = (provider, subId) => `member:${provider}:${subId}`;
 const emailKey = (email) => `email:${String(email || "").trim().toLowerCase()}`;
@@ -119,7 +119,10 @@ export function shippingList(members, month) {
 }
 
 export function toCsv(rows) {
-  const cols = ["name", "email", "line1", "line2", "city", "postal_code", "state", "country", "plan", "provider"];
+  return toCsvRows(rows, ["name", "email", "line1", "line2", "city", "postal_code", "state", "country", "plan", "provider"]);
+}
+
+export function toCsvRows(rows, cols) {
   const cell = (v) => {
     let s = String(v ?? "");
     if (/^[=+\-@]/.test(s)) s = "'" + s; // stop spreadsheets treating text as a formula

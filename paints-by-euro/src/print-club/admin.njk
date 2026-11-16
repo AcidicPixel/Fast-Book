@@ -1,6 +1,6 @@
 ---
 layout: layouts/base.njk
-pageTitle: "Print Club members"
+pageTitle: "Members and lists"
 description: "Members and shipping addresses for this month."
 noindex: true
 permalink: /print-club/admin/
@@ -25,4 +25,12 @@ scripts: ["club-admin"]
     <p><button type="button" class="btn btn-line" data-admin-csv>Download CSV</button></p>
     <div class="table-wrap"><table data-admin-table></table></div>
   </div>
+  <section class="admin-exports" data-admin-exports hidden>
+    <h2 class="section-title">Newsletter and messages</h2>
+    <p>Newsletter sign-ups and every message sent through the Commission &amp; Contact form.</p>
+    <p class="member-actions">
+      <button type="button" class="btn btn-line" data-export="newsletter">Download newsletter list (CSV)</button>
+      <button type="button" class="btn btn-line" data-export="messages">Download messages (CSV)</button>
+    </p>
+  </section>
 </section>

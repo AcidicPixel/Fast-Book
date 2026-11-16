@@ -1,4 +1,4 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { processImages, picture, imgUrl, getImage } from "./lib/images.js";
 
@@ -25,9 +25,9 @@ export default function (config) {
   // Copy the public catalogue next to the serverless functions so checkout
   // prices come from the same content files as the pages.
   config.on("eleventy.after", async () => {
-    const dest = "netlify/functions/_lib/catalog.generated.json";
+    const dest = "server/_lib/catalog.generated.mjs";
     await mkdir(path.dirname(dest), { recursive: true });
-    await copyFile("_site/catalog.json", dest);
+    await writeFile(dest, `// Written by the site build. Do not edit.\nexport default ${await readFile("_site/catalog.json", "utf8")};\n`);
   });
 
   config.addShortcode("picture", (p, alt, mode = "thumb", sizes = "100vw", cls = "", eager = false) =>
@@ -67,6 +67,7 @@ export default function (config) {
   config.addCollection("printsOnly", (api) => api.getFilteredByGlob("src/prints-items/*.md").filter((p) => p.data.type !== "card").sort(byDate));
   config.addCollection("cards", (api) => api.getFilteredByGlob("src/prints-items/*.md").filter((p) => p.data.type === "card").sort(byDate));
   config.addPassthroughCopy({ "src/_redirects": "_redirects" });
+  config.addPassthroughCopy({ "src/_headers": "_headers" });
 
   return {
     dir: { input: "src", includes: "_includes", data: "_data", output: "_site" },

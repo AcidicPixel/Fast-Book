@@ -91,7 +91,7 @@ Date.now = () => realNow() + offset;
 
 before(async () => {
   const names = ["status", "config", "stripe-create-session", "stripe-webhook", "paypal-create-order", "paypal-capture-order", "paypal-webhook", "release"];
-  for (const n of names) fn[n] = (await import(`../netlify/functions/${n}.mjs`)).default;
+  for (const n of names) fn[n] = (await import(`../server/${n}.mjs`)).default;
 });
 
 const post = (name, body, headers = {}) =>

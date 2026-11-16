@@ -21,6 +21,7 @@
     var err = $("[data-admin-error]"); err.hidden = true;
     fetchList("json").then(function (data) {
       $("[data-admin-result]").hidden = false;
+      $("[data-admin-exports]").hidden = false;
       $("[data-admin-summary]").textContent = data.members.length + " bundle" + (data.members.length === 1 ? "" : "s") + " to send for " + data.month + (data.skipped ? " (" + data.skipped + " skipping)" : "") + ".";
       var cols = ["name", "email", "line1", "line2", "city", "postal_code", "state", "country", "plan", "provider"];
       $("[data-admin-table]").innerHTML = "<thead><tr>" + cols.map(function (c) { return "<th scope=col>" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>" +
@@ -34,5 +35,17 @@
       a.download = "print-club-" + month.value + ".csv";
       document.body.appendChild(a); a.click(); a.remove();
     }).catch(function (x) { var err = $("[data-admin-error]"); err.textContent = x.message; err.hidden = false; });
+  });
+  root.querySelectorAll("[data-export]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      fetch("/api/admin/export?type=" + btn.dataset.export, { headers: { authorization: "Bearer " + $("#a-pass").value } })
+        .then(function (r) { if (!r.ok) throw new Error(r.status === 401 ? "Wrong password." : "Could not download the list."); return r.blob(); })
+        .then(function (blob) {
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob); a.download = btn.dataset.export + ".csv";
+          document.body.appendChild(a); a.click(); a.remove();
+        })
+        .catch(function (x) { var err = $("[data-admin-error]"); err.textContent = x.message; err.hidden = false; });
+    });
   });
 })();
