@@ -24,7 +24,7 @@ This guide covers three things:
 
 Everything below is in the Cloudflare dashboard (dash.cloudflare.com). No command line is needed. The site runs as one Worker: it serves the pages and runs checkout, the Print Club, the forms and the daily Print Club job.
 
-1. **Create the application.** Make a free Cloudflare account. Go to **Workers & Pages → Create application → Import a repository** (Continue with GitHub), and pick **AcidicPixel/Fast-Book**.
+1. **Create the application.** Make a free Cloudflare account. Go to **Workers & Pages → Create application → Import a repository** (Continue with GitHub), and pick this repository.
 2. **Fill in the build settings:**
 
    | Field | Value |
@@ -33,7 +33,7 @@ Everything below is in the Cloudflare dashboard (dash.cloudflare.com). No comman
    | Build command | `npm run build` |
    | Deploy command | `npx wrangler deploy` |
    | Non-production branch deploy command | `npx wrangler versions upload` (the default) |
-   | Path / Root directory (under **Advanced settings**) | `paints-by-euro` |
+   | Path / Root directory (under **Advanced settings**) | leave empty, or `/` |
    | Build variable | `SITE_URL` = your site's address, e.g. `https://paints-by-euro.<your-subdomain>.workers.dev` (later, your own domain) |
 
    Click **Deploy**. The first build takes a few minutes, because it makes all the image sizes.

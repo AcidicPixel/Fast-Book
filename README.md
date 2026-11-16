@@ -1,91 +1,108 @@
-# Introductory Guide
+# Paints by Euro
 
-Welcome to the codebase! This document is designed to help you understand how this application is wired together, where to find things, how to fix them when they break, and how to effectively use AI to speed up your development.
+Portfolio and shop for an artist who works in oil paint and pen, with prints, cards, postcards and a monthly Print Club.
+Static site (Eleventy) served by one Cloudflare Worker (static assets + `/api/*` code), with Cloudflare D1 for live data.
 
-This app is built using a **Microservice Architecture** orchestrated by **.NET Aspire**. While there is some advanced plumbing under the hood (like an API Gateway and an Event Bus/DB setup), I've set these up in a way you don't need to think about them, of course give me an ask if you do want to know anything
+The artist's setup guide, the list of placeholders to replace and the steps to go live are in **[SETUP-FOR-ARTIST.md](SETUP-FOR-ARTIST.md)**.
 
-Your main playground consists of two areas: The **React Frontend** and the **C# Trip Service**.
+## Site map
 
+```
+/                          Home: hero (work + introduction), about the artist, the four collections,
+                           new work, Print Club, commissions, next event (hidden if none), newsletter
+/collections/              All pieces; filters Medium (All, Oil Paint, Pen Sketches, Prints, Cards & Postcards)
+                           and Show (All, Available); ?medium=oil|pen|print|card preselects; zoom viewer
+/collections/<slug>/       One page per original: facts, photo slider, Buy / Make an enquiry
+/prints/                   Prints, and Cards & Postcards (each with #slug anchor and Buy)
+/print-club/               Monthly bundle (1 print, 1 card, 1 postcard): price, saving, join, past bundles, Q&A
+/print-club/manage/        Members: email link → change address, skip a month, cancel (noindex)
+/print-club/admin/         Artist: this month's members and addresses, CSV export (password; noindex)
+/print-club/welcome/       After sign-up (noindex)
+/about/  /process/
+/commission-contact/       Commissions first, then the contact form (subjects include Print Club)
+/shipping-returns/  /terms/ (draft)  /privacy/ (draft)
+/checkout/  /checkout/cancelled/  /thank-you/  /thanks/  /404.html  /sitemap.xml  /catalog.json
 
-TO RUN THE CODE, YOU CLICK THE .SLNX FILE, MAKE SURE APPHOST IS THE STARTUP PROJECT NEXT TO THE GREEN ARROW AND PRESS GO! :))
-When you get on the dashboard, click the link to the front end :)
+Old addresses (301 via _redirects, plus fallback pages): /work → /collections, /work/<slug>/ → /collections/<slug>/,
+/work/pencil-0N/ → /collections/pen-0N/, /contact → /commission-contact
 
----
+/api/club/config                 GET   public Print Club settings
+/api/club/stripe-checkout        POST  Stripe Billing subscription (Checkout)
+/api/club/paypal-subscription    POST  PayPal subscription
+/api/club/manage-link            POST  email a one-hour sign-in link
+/api/club/me | portal | skip | address   member self-service
+/api/club/members                GET   artist list (JSON / CSV), Authorization: Bearer CLUB_ADMIN_PASSWORD
+club-resume                      daily (Worker cron): resumes PayPal members after a skipped month
+/api/stripe/webhook, /api/paypal/webhook also handle subscription events
+(plus the original-artwork checkout endpoints: /api/status, /api/config, /api/stripe/*, /api/paypal/*, /api/release)
+```
 
-## 1. How the Code is Structured
+## Design system
 
-### The Backend (`/src/TripService`)
-This is our data engine. It receives requests from the frontend, talks to the database, and sends data back. We use a pattern called the "Repository Pattern" to keep things organized.
+**Colour.** Three neutrals and one pigment. No colour is ever placed behind artwork: frames, viewer and cards are transparent on paper. Every text colour is at least 7:1 on the paper, measured on the darkest pixel of the texture.
 
-* **`Models/Trip.cs`**: The blueprint. This defines exactly what a "Trip" looks like in the database (columns like Name, Price, Date).
-* **`DTO/` (Data Transfer Objects)**: We don't want to send the *entire* database row to the frontend (this can cause security issues). DTOs are lightweight versions of our models shaped specifically for the UI.
-* **`Profiles/ServiceProfile.cs`**: Uses a tool called AutoMapper to automatically translate our heavy Database Models into our lightweight DTOs.
-* **`Data/TripDbContext.cs`**: The bridge to Postgres. This translates our C# code into SQL (database) commands.
-* **`Data/TripServiceRepo.cs`**: The actual database worker. This is where we write the logic to Get, Create, and Delete trips.
-* **`Controllers/TripController.cs`**: The front door to the API. This intercepts network requests from the frontend, asks the Repo for the data, and returns it as JSON (A structured file type).
+| Token | Value | Use | Contrast |
+|---|---|---|---|
+| `--paper` | `#F4EFE6` warm off-white | background on every page | — |
+| `--graphite` | `#1E1C19` | text | 14.8:1 (13.7 on darkest texture) |
+| `--graphite-soft` | `#45423C` | secondary text | 8.7:1 (8.1) |
+| `--accent` | `#9A4526` dark clay | the one accent: buttons, link lines, hover, focus, small details (dots) | 5.6:1 (5.2) |
+| `--rule` | `#CFC7B9` | hairlines only, never text | — |
 
-### The Frontend (`/src/FrontEnd`)
-This is a React application built with Vite and TypeScript. We have specifically structured it so that API calls are completely separated from the UI logic.
+There is no blue anywhere on the site. Body text stays graphite (7:1 or more). Clay is used only where 4.5:1 is enough: buttons, link lines, hover states and small details. The hex also appears in the `--line-accent` SVG and the favicon.
 
-* **`src/api/DtoTypes.ts`**: The TypeScript contracts. This mirrors the C# DTOs so our frontend knows exactly what data to expect.
-* **`src/api/HttpClient.ts`**: A wrapper around the standard browser `fetch` command. We handle all our headers and error-checking here so we don't have to repeat it.
-* **`src/api/useApi.ts`**: A custom React Hook. Network requests have three states: *Loading*, *Error*, and *Data*. This hook manages those states automatically so our UI components stay perfectly clean.
-* **`src/api/services/tripService.ts`**: Our catalogue of endpoints. We define the URLs here.
-* **`src/App.tsx`**: The main dashboard page where we tie the API data to the actual HTML/CSS on the screen.
+**Background.** `#F4EFE6`, plus a seamless 640 px handmade-paper tile (`src/assets/paper-texture.webp`, 28 KB) with fibres and uneven tone. It sits at 6% opacity on a fixed layer behind all content, so it is never on top of artwork. Rebuild it with `node scripts/make-paper-texture.mjs`.
 
----
+**Type.** Two self-hosted families, so no third-party font requests.
+- Headings: *Fraunces*, weight 500 (italic for the wordmark and work titles in captions).
+- Body: *Source Sans 3*, weight 400, line height 1.6, 18 px on phones rising to 20 px on desktop.
+- Wordmark: Fraunces 500, upright, 27 px, letter spacing 0.03em (fits at 320 px).
+- Scale: 18–20 (the minimum for any text) · 25 · 31–40 · 40–62 · 48–90 px.
+- Home sections are 64 px apart on phones, 80 px on tablets and 112 px on desktop.
 
-## 2. Debugging 101
+**Space.** 4 · 8 · 16 · 24 · 40 · 64 · 104 · 160 px (`--s-1` … `--s-8`). Side gutter 16–64 px. Content max width 1440 px. A 12-column grid places work off-centre.
 
-Things *will* break. This is life, but you'll find that things more break and can be fixed much easier that bubble and the fixes you run into will be for "bigger" steps rather than messing around with just a calendar
+**Motion.** Simple and quiet.
+- Paintings, captions and headings fade up once (24 px, 0.7 s) as they come into view. Paintings side by side follow each other by 80 ms, and captions follow their painting by 150 ms. Anything already on screen when the page opens appears straight away.
+- The browser runs these as CSS transitions, so no script runs while scrolling. Nothing is pinned, and scrolling speed is never changed.
+- One easing curve: `cubic-bezier(0.22, 1, 0.36, 1)`. Only `opacity` and `transform` are animated.
+- Viewer: the painting grows from its place on the page and goes back on close. Next and previous use a 700 ms crossfade, and swiping follows your finger. The photo slider crossfades in 600 ms.
+- Page changes: a 450 ms crossfade (View Transitions, where supported).
+- Reduced motion: only 200 ms fades.
 
-### The .NET Aspire Dashboard (Your Best Friend)
-When you run the AppHost (always make sure you do this when you press run (you can accidentally run the trip service or gateway :)), a dashboard opens in your browser. This is your command center.
+## Content and images
 
-* **Resources Tab:** Shows you every piece of the puzzle (Database, API, Frontend). If something has a red exclamation mark, it crashed on startup. Click "View" under Endpoints to see connection strings or open Swagger.
+- Originals: one Markdown file per piece in `src/works/` (medium `oil` or `pen`). Prints, cards and postcards: `src/prints-items/` (type `print` or `card`). Both are (edited through Pages CMS, see `.pages.yml` at the repo root).
+- Settings: `src/_data/site.json` (currency, shipping, tax line, socials, prints switch, analytics).
+- Photos: put JPG or PNG files in `src/images/`. The build makes WebP at 480, 1024 and 2048 px wide (never enlarged). 1024 and 2048 get a small watermark; the 480 thumbnail does not. All images except the first on a page are lazy-loaded.
+- Alt text is generated as "Placeholder: Title, oil painting" / "Title, pen sketch (close detail)" / "Title, print" / "Title, card".
+- `npm run placeholders` rebuilds the placeholder photos from their sources (Art Institute of Chicago CC0 artworks; Pexels room and studio photos). Sources and licences: `src/images/PLACEHOLDER-SOURCES.md`.
 
-Swagger can be opened via clicking a resource (trip service) on the aspire dashboard and appending "/swagger" to the URL, it shows you a clear overview of the endpoints, what the inputs should be and what they output.
+## Live status (Reserved / Sold)
 
-* **Console Logs Tab:** Click on `tripservice` here. If your C# code crashes, the exact line number and error message will be printed here.
-* **Traces Tab:** Shows you the exact path a request took. You can see how long the Gateway took to route it, how long the Database took to query it, and where it failed.
+The artist sets status in the content file. Checkout adds a live layer in Cloudflare D1 (`server/_lib/store.mjs`, a key-value table with conditional writes):
+- Starting checkout writes a hold for 31 minutes. The write is conditional, so two buyers can't both get it. (Stripe's shortest session is 30 minutes; the extra minute covers clock differences.)
+- No payment in that time: the hold simply expires and the work shows Available again. Stripe's `checkout.session.expired` event or the cancel page releases it sooner.
+- Only a signature-verified webhook marks a work Sold and sends the emails. The return page is never trusted.
+- Repeated webhooks don't repeat emails. A second payment for an already-sold work emails the artist to refund it.
+- If a sold work comes back (e.g. refunded), add 1 to its **Relist counter** in the CMS.
 
-### Visual Studio Breakpoints
-If the code is running but doing the wrong thing, use a breakpoint.
-1. Click the gray margin to the left of the line numbers in your C# code (a red dot will appear).
-2. Trigger the action in your browser.
-3. Visual Studio will pause time exactly on that line. You can hover your mouse over variables to see what data they hold in real-time.
+## Hosting (Cloudflare Workers)
 
-### Browser Developer Tools (F12)
-If the frontend isn't showing data, press F12 in your browser and go to the **Network** tab.
-* Look for the request marked in red.
-* **400 Bad Request:** You sent bad data (e.g., missed a required field).
-* **404 Not Found:** The URL is wrong, or the backend Controller route doesn't match.
-* **500 Internal Server Error:** Your C# backend crashed. Check the Aspire Console Logs!
-* **502 Bad Gateway:** The API Gateway is alive, but the backend service is offline or unreachable.
+- `wrangler.jsonc` sets up the Worker: static assets from `_site`, the Worker runs only for `/api/*`, the D1 binding `DB` (created on first deploy), the `nodejs_compat` flag and a daily cron.
+- `worker.js` sends `/api/*` to `functions/api/[[route]].js`, which routes to the handler in `server/` that declares that path. The router copies variables into `process.env` and connects D1. The `scheduled` handler runs the PayPal resume job.
+- `src/_redirects` (old /work and /contact addresses) and `src/_headers` (security and cache headers) are applied to the static assets. `404.html` is the not-found page.
+- Forms post to `/api/contact` and `/api/newsletter` and work without JavaScript. They redirect to `/thanks/`.
+- Workers Builds settings: build `npm run build`, deploy `npx wrangler deploy`, root directory left empty (the site is at the top of the repo).
 
----
+## Develop
 
-## 3. The AI Workflow: How to Code with an LLM
+```bash
+npm install
+npm start          # http://localhost:8080 (pages only)
+npm test           # builds, then runs all payment, Print Club and form tests with mock Stripe/PayPal
+npm run build && npx wrangler dev
+                   # the real Worker locally with a local D1 (keys as --var NAME:value)
+```
 
-Using AI isn't about asking it to "build an app" and walking away. It is a highly interactive, conversational process. Treat the AI like a senior developer sitting next to you. Here is the exact workflow to get the best results:
-
-**1. Provide the Error First**
-If something crashes, don't just say "it broke." Copy and paste the *entire* stack trace or error message directly into the chat. AI can read those cryptic logs instantly.
-> *"I'm getting this error: `System.InvalidOperationException: The ConnectionString property has not been initialized.`"*
-
-**2. Provide the Context (The Code)**
-The AI cannot see your screen. Whenever you ask a question or share an error, paste the relevant file or code block that is causing the issue.
-> *"Here is the `Program.cs` file where the error is happening: [paste code]"*
-
-**3. State Your Intent**
-Explain what you were *trying* to do when the error happened, or what you want the code to do next.
-> *"I was trying to run `update-database` in the console so I could see my dummy trips."*
-
-**4. Iterate Step-by-Step**
-Don't try to build the entire app in one prompt. Build the Database model first. Once that works, ask it to help build the Controller. Once that works, ask it to help write the React component.
-
-**5. Ask "Why?"**
-If the AI gives you a fix and it works, but you don't understand *why* it worked, ask! 
-> *"That fixed the 502 Bad Gateway error, but why did changing the hyphen in the vite.config.ts make a difference?"*
-
-Love you xx
+Environment variables are listed in SETUP-FOR-ARTIST.md. Live keys are refused unless `ALLOW_LIVE_PAYMENTS=true`.

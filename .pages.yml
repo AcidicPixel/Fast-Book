@@ -1,14 +1,14 @@
 # Pages CMS (https://pagescms.org) — a free web editor for this repository.
 # The artist signs in with GitHub and edits works, prices and status without code.
 media:
-  input: paints-by-euro/src/images/uploads
+  input: src/images/uploads
   output: /images/uploads
 
 content:
   - name: works
     label: Works
     type: collection
-    path: paints-by-euro/src/works
+    path: src/works
     filename: "{primary}.md"
     exclude: [works.11tydata.js]
     view:
@@ -38,7 +38,7 @@ content:
   - name: prints
     label: Prints, cards and postcards
     type: collection
-    path: paints-by-euro/src/prints-items
+    path: src/prints-items
     filename: "{primary}.md"
     exclude: [prints-items.11tydata.js]
     view: { fields: [title, price], primary: title }
@@ -55,7 +55,7 @@ content:
   - name: settings
     label: Settings
     type: file
-    path: paints-by-euro/src/_data/site.json
+    path: src/_data/site.json
     format: json
     fields:
       - { name: name, label: Site name, type: string }
