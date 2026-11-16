@@ -34,14 +34,14 @@ Everything below is in the Cloudflare dashboard (dash.cloudflare.com). No comman
    | Deploy command | `npx wrangler deploy` |
    | Non-production branch deploy command | `npx wrangler versions upload` (the default) |
    | Path / Root directory (under **Advanced settings**) | leave empty, or `/` |
-   | Build variable | `SITE_URL` = your site's address, e.g. `https://paints-by-euro.<your-subdomain>.workers.dev` (later, your own domain) |
 
-   Click **Deploy**. The first build takes a few minutes, because it makes all the image sizes.
-3. **Database.** Nothing to do. The settings file (`wrangler.jsonc`) asks for a D1 database called `paints-by-euro`, and Cloudflare creates it on the first deploy. The site creates its table by itself. If the deploy log says it couldn't create the database, go to **Storage & Databases → D1 → Create**, name it `paints-by-euro`, and tell me its ID.
-4. **Keys and settings** (sections 5–9) go in the Worker's **Settings → Variables and Secrets**. Choose **Secret** for anything secret. Also add `SITE_URL` there, with the same value as in step 2. Changes take effect straight away.
-5. **Your own domain** (optional): in the Worker, go to **Settings → Domains & Routes → Add → Custom domain**. HTTPS is automatic. Then update `SITE_URL` in both places.
-6. **Save builds** (optional): in **Settings → Build → Branch control**, turn off builds for non-production branches.
-7. **Forms.** The contact form emails each message to you; this needs the Resend setup in section 5. It also keeps a copy. Newsletter sign-ups are saved too. Download both as CSV files at `/print-club/admin/`, using the `CLUB_ADMIN_PASSWORD` from section 9.
+   Click **Deploy**. The first build takes a few minutes, because it makes all the image sizes. You don't need a web address yet: when it finishes, Cloudflare shows the site's free address (like `https://paints-by-euro.<your-name>.workers.dev`) on the Worker's overview page.
+3. **Add the address.** Copy that address. Add it as `SITE_URL` in two places: the Worker's **Settings → Variables and Secrets**, and **Settings → Build → Variables** (for the build). Then redeploy once from **Deployments**. The site works without it, but the address appears in emails and search-engine links.
+4. **Database.** Nothing to do. The settings file (`wrangler.jsonc`) asks for a D1 database called `paints-by-euro`, and Cloudflare creates it on the first deploy. The site creates its table by itself. If the deploy log says it couldn't create the database, go to **Storage & Databases → D1 → Create**, name it `paints-by-euro`, and tell me its ID.
+5. **Keys and settings** (sections 5–9) go in the Worker's **Settings → Variables and Secrets**. Choose **Secret** for anything secret.  Changes take effect straight away.
+6. **Your own domain** (optional): in the Worker, go to **Settings → Domains & Routes → Add → Custom domain**. HTTPS is automatic. Then update `SITE_URL` in both places.
+7. **Save builds** (optional): in **Settings → Build → Branch control**, turn off builds for non-production branches.
+8. **Forms.** The contact form emails each message to you; this needs the Resend setup in section 5. It also keeps a copy. Newsletter sign-ups are saved too. Download both as CSV files at `/print-club/admin/`, using the `CLUB_ADMIN_PASSWORD` from section 9.
 
 ## 2. Edit the site without code (Pages CMS)
 

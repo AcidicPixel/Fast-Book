@@ -1,6 +1,7 @@
 // The site's address for canonical links and the sitemap.
-// On Cloudflare, set SITE_URL (e.g. https://paintsbyeuro.com) as a build variable.
+// Set SITE_URL (e.g. https://paints-by-euro.example.workers.dev) as a build variable
+// once the site has an address. Until then, links are written without a domain.
 export default {
-  url: (process.env.SITE_URL || process.env.CF_PAGES_URL || "http://localhost:8080").replace(/\/$/, ""),
+  url: (process.env.SITE_URL || "").replace(/\/$/, ""),
   build: new Date().toISOString(),
 };
